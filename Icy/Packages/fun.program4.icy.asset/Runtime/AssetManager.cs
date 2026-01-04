@@ -273,6 +273,15 @@ namespace Icy.Asset
 			return _Package == null ? string.Empty : _Package.PackageName;
 		}
 
+		/// <summary>
+		/// 指定资源是否存在
+		/// </summary>
+		public bool Exist(string address)
+		{
+			AssetInfo info = _Package.GetAssetInfo(address);
+			return !info.IsInvalid;
+		}
+
 		#region Patch
 		/// <summary>
 		/// 开始热更新资源
