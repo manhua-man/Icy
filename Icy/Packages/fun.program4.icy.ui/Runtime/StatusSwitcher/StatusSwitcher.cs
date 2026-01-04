@@ -35,7 +35,8 @@ namespace Icy.UI
 		/// 所有的Status
 		/// </summary>
 		[BoxGroup("状态列表")]
-		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
+		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true
+			, CustomRemoveIndexFunction = nameof(DeleteStatusIdx))]
 		[SerializeField]
 		internal List<StatusSwitcherItem> StatusList;
 
@@ -114,7 +115,7 @@ namespace Icy.UI
 			UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += OnPrefabStageClosing;
 		}
 
-		private static void OnPrefabStageClosing(UnityEditor.SceneManagement.PrefabStage stage)
+		protected static void OnPrefabStageClosing(UnityEditor.SceneManagement.PrefabStage stage)
 		{
 			if (stage.prefabContentsRoot != null)
 			{
@@ -133,7 +134,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 选择要添加的StatusSwitcherTarget
 		/// </summary>
-		private void OnEditorUpdate()
+		protected void OnEditorUpdate()
 		{
 			int pickerControlID = UnityEditor.EditorGUIUtility.GetObjectPickerControlID();
 
@@ -182,6 +183,41 @@ namespace Icy.UI
 		{
 			return !string.IsNullOrEmpty(_InputName);
 		}
+
+		/// <summary>
+		/// 删除StatusItem的处理
+		/// </summary>
+		protected bool DeleteStatusIdx(int idx)
+		{
+			bool shouldDelete = UnityEditor.EditorUtility.DisplayDialog(""
+				, $"确定删除 {StatusList[idx].Name} 吗？ \n{StatusList[idx].Name} 关联的所有状态也会一并删除", "确定", "取消");
+			if (!shouldDelete)
+				return false;
+
+			//移除关联的StatusSwitcherTarget上的相关状态数据
+			if (StatusList[idx].Targets != null)
+			{
+				for (int t = 0; t < StatusList[idx].Targets.Count; t++)
+				{
+					StatusSwitcherTarget target = StatusList[idx].Targets[t];
+					bool relative = false;
+					for (int i = target.Records.Count - 1; i >= 0; i--)
+					{
+						if (target.Records[i].StatusItem == StatusList[idx])
+						{
+							target.Records.RemoveAt(i);
+							if (!relative)
+								relative = true;
+						}
+					}
+					if (relative)
+						target.StatusItemName = StatusSwitcherTarget.NONE;
+				}
+			}
+
+			StatusList.RemoveAt(idx);
+			return true;
+		}
 #endif
 
 		/// <summary>
@@ -222,11 +258,6 @@ namespace Icy.UI
 					return true;
 			}
 			return false;
-		}
-
-		internal void DeleteStatus(string statusName)
-		{
-
 		}
 
 		public override string ToString()

@@ -40,7 +40,7 @@ namespace Icy.UI
 		[ValueDropdown(nameof(_StatusItems), IsUniqueList = true, DropdownWidth = 200)]
 		[OnValueChanged(nameof(OnStatusItemDropdownChanged))]
 		[ShowInInspector]
-		protected string StatusItemName = NONE;
+		internal string StatusItemName = NONE;
 #endif
 
 		[PropertySpace(10, 10)]
@@ -119,7 +119,7 @@ namespace Icy.UI
 		/// <summary>
 		/// StatusItem下拉列表的空选项
 		/// </summary>
-		protected const string NONE = "None";
+		internal const string NONE = "None";
 
 		protected void OnInspectorInit()
 		{

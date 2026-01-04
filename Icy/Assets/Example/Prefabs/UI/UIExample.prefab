@@ -578,21 +578,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RecordTypes: 2
+  RecordTypes: 3
   GameObjectStatus:
     ActiveSelf: 1
   TransformStatus:
     LocalPosition: {x: 680, y: -50, z: 0}
     LocalRotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
-  _Records:
+  Records:
   - StatusItem:
       Name: 666
       Targets:
       - {fileID: 1301465939674304944}
       - {fileID: 503784425645798134}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 3
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 1
@@ -606,7 +606,7 @@ MonoBehaviour:
       - {fileID: 1301465939674304944}
       - {fileID: 503784425645798134}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 3
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 1
@@ -707,14 +707,15 @@ MonoBehaviour:
   GameObjectStatus:
     ActiveSelf: 1
   TransformStatus:
-    LocalPosition: {x: -680, y: -50, z: 0}
+    LocalPosition: {x: -405.3, y: -158.5, z: 0}
     LocalRotation: {x: -0, y: -0, z: -0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
-  _Records:
+  Records:
   - StatusItem:
       Name: 666
       Targets:
       - {fileID: 1301465939674304944}
+      - {fileID: 503784425645798134}
       StatusSwitcher: {fileID: 5236466835000511476}
     RecordTypes: 3
     AllStatusSwitcherComponent:
@@ -728,8 +729,9 @@ MonoBehaviour:
       Name: 123
       Targets:
       - {fileID: 1301465939674304944}
+      - {fileID: 503784425645798134}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 3
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 1
