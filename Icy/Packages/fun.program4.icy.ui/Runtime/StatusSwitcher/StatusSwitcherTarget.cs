@@ -102,15 +102,24 @@ namespace Icy.UI
 				if (item == statusItem)
 				{
 					AllStatusSwitcherComponent all = Records[i].AllStatusSwitcherComponent;
-					all.gameObject.Init(this);
-					all.gameObject.Apply();
 
-					all.transform.Init(this);
-					all.transform.Apply();
+					TryToApply(all.gameObject, i, StatusSwitcherRecordType.GameObject);
+					TryToApply(all.transform, i, StatusSwitcherRecordType.Transform);
 
 					//New Status stub
 					return true;
 				}
+			}
+			return false;
+		}
+
+		protected bool TryToApply(StatusSwitcherStatusBase status, int idx, StatusSwitcherRecordType type)
+		{
+			if (Records[idx].RecordTypes.HasFlag(type))
+			{
+				status.Init(this);
+				status.Apply();
+				return true;
 			}
 			return false;
 		}
