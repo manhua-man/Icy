@@ -35,8 +35,10 @@ namespace Icy.UI
 		/// 所有的Status
 		/// </summary>
 		[BoxGroup("状态列表")]
+#if UNITY_EDITOR
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true
 			, CustomRemoveIndexFunction = nameof(DeleteStatusIdx))]
+#endif
 		[SerializeField]
 		internal List<StatusSwitcherItem> StatusList;
 
