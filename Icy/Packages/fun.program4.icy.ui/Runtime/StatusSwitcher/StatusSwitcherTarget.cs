@@ -17,6 +17,7 @@
 
 using Icy.Base;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,8 +50,11 @@ namespace Icy.UI
 		[ShowIf(nameof(NeedShowRecordTypes))]
 		[OnInspectorInit(nameof(OnInspectorInit))]
 		[OnInspectorDispose(nameof(OnInspectorDispose))]
+		[OnValueChanged(nameof(OnRecordTypesChanged))]
 #endif
 		public StatusSwitcherRecordType RecordTypes;
+
+		protected StatusSwitcherRecordType _PrevRecordTypes;
 
 		/// <summary>
 		/// GameObject类型的状态
@@ -176,39 +180,82 @@ namespace Icy.UI
 		protected void OnStatusItemDropdownChanged()
 		{
 			if (StatusItemName == NONE)
+			{
+				_PrevRecordTypes = StatusSwitcherRecordType.None;
 				Clear();
+			}
 			else
 			{
 				int idx = _StatusItems.IndexOf(StatusItemName);
 				idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 				StatusSwitcherRecord record = Records[idx];
 				RecordTypes = record.RecordTypes;
+				_PrevRecordTypes = record.RecordTypes;
 
-				GameObjectStatus = new GameObjectStatus();
-				InitStatus(GameObjectStatus, record.AllStatusSwitcherComponent.gameObject, StatusSwitcherRecordType.GameObject);
-				TransformStatus = new TransformStatus();
-				InitStatus(TransformStatus, record.AllStatusSwitcherComponent.transform, StatusSwitcherRecordType.Transform);
-
-				//New Status stub
+				ForeachRecordType((StatusSwitcherRecordType recordType) =>
+				{
+					InitStatus(record, recordType);
+				});
 			}
 		}
 
-		/// <summary>
-		/// 初始化一个Status
-		/// </summary>
-		protected void InitStatus(StatusSwitcherStatusBase status, StatusSwitcherStatusBase serializedStatus
-			, StatusSwitcherRecordType recordType)
+		protected void OnRecordTypesChanged()
 		{
-			if (RecordTypes.HasFlag(recordType))
+			int idx = _StatusItems.IndexOf(StatusItemName);
+			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
+			StatusSwitcherRecord record = Records[idx];
+
+			ForeachRecordType((StatusSwitcherRecordType recordType) =>
 			{
-				status.CopyFrom(serializedStatus);
-				status.Init(this);
-				status.Apply();
+				if (!_PrevRecordTypes.HasFlag(recordType))
+					InitStatus(record, recordType);
+			});
+
+			_PrevRecordTypes = RecordTypes;
+		}
+
+		protected void InitStatus(StatusSwitcherRecord record, StatusSwitcherRecordType recordType)
+		{
+			bool has = RecordTypes.HasFlag(recordType);
+			switch (recordType)
+			{
+				case StatusSwitcherRecordType.GameObject:
+					if (has)
+					{
+						GameObjectStatus = new GameObjectStatus();
+						InitStatusSingle(GameObjectStatus, StatusSwitcherRecordType.GameObject
+							, record.AllStatusSwitcherComponent.gameObject);
+					}
+					else
+						GameObjectStatus = null;
+					break;
+				case StatusSwitcherRecordType.Transform:
+					if (has)
+					{
+						TransformStatus = new TransformStatus();
+						InitStatusSingle(TransformStatus, StatusSwitcherRecordType.Transform
+							, record.AllStatusSwitcherComponent.transform);
+					}
+					else
+						TransformStatus = null;
+					break;
+				case StatusSwitcherRecordType.RectTransform:
+					break;
+				default:
+					break;
 			}
+			//New Status stub
+		}
+
+		protected void InitStatusSingle(StatusSwitcherStatusBase status, StatusSwitcherRecordType recordType, StatusSwitcherStatusBase statusSaved)
+		{
+			status.Init(this);
+			if (!_PrevRecordTypes.HasFlag(recordType))
+				status.Record();
 			else
 			{
-				status.Init(this);
-				status.Record();
+				status.CopyFrom(statusSaved);
+				status.Apply();
 			}
 		}
 
@@ -224,11 +271,29 @@ namespace Icy.UI
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 			StatusSwitcherRecord record = Records[idx];
 			record.RecordTypes = RecordTypes;
-			if (RecordTypes.HasFlag(StatusSwitcherRecordType.GameObject))
-				record.AllStatusSwitcherComponent.gameObject = GameObjectStatus;
-			if (RecordTypes.HasFlag(StatusSwitcherRecordType.Transform))
-				record.AllStatusSwitcherComponent.transform = TransformStatus;
 
+			ForeachRecordType((StatusSwitcherRecordType recordType) => 
+			{
+				SaveSingle(record, recordType);
+			});
+		}
+
+		protected void SaveSingle(StatusSwitcherRecord record, StatusSwitcherRecordType recordType)
+		{
+			bool has = RecordTypes.HasFlag(recordType);
+			switch (recordType)
+			{
+				case StatusSwitcherRecordType.GameObject:
+					record.AllStatusSwitcherComponent.gameObject = has ? GameObjectStatus : null;
+					break;
+				case StatusSwitcherRecordType.Transform:
+					record.AllStatusSwitcherComponent.transform = has ? TransformStatus : null;
+					break;
+				case StatusSwitcherRecordType.RectTransform:
+					break;
+				default:
+					break;
+			}
 			//New Status stub
 		}
 
@@ -258,6 +323,13 @@ namespace Icy.UI
 				newRecord.AllStatusSwitcherComponent = new AllStatusSwitcherComponent();
 				Records.Add(newRecord);
 			}
+		}
+
+		protected void ForeachRecordType(Action<StatusSwitcherRecordType> callback)
+		{
+			Array enumValues = Enum.GetValues(typeof(StatusSwitcherRecordType));
+			foreach (StatusSwitcherRecordType e in enumValues)
+				callback(e);
 		}
 
 		protected bool FindUIBase(Transform trans)
@@ -301,14 +373,15 @@ namespace Icy.UI
 			TransformStatus?.Dispose();
 			GameObjectStatus = null;
 			TransformStatus = null;
+			//New Status stub
 		}
 	}
 
 	/// <summary>
 	/// 所有状态的Flag
 	/// </summary>
-	[System.Flags]
-	[System.Serializable]
+	[Flags]
+	[Serializable]
 	public enum StatusSwitcherRecordType
 	{
 		None = 0,
@@ -320,13 +393,12 @@ namespace Icy.UI
 		//ButtonEx = 1 << 5,
 
 		//New Status stub
-		All = ~0,
 	}
 
 	/// <summary>
 	/// 一条Record，对应一个StatusItem
 	/// </summary>
-	[System.Serializable]
+	[Serializable]
 	public class StatusSwitcherRecord
 	{
 		/// <summary>
@@ -346,7 +418,7 @@ namespace Icy.UI
 	/// <summary>
 	/// 所有组件数据的集合
 	/// </summary>
-	[System.Serializable]
+	[Serializable]
 	public class AllStatusSwitcherComponent
 	{
 		public GameObjectStatus gameObject;

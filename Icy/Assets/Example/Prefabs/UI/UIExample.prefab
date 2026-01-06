@@ -500,7 +500,7 @@ GameObject:
   - component: {fileID: 1059613912594482414}
   - component: {fileID: 5744979878312656070}
   - component: {fileID: 8214692716955697114}
-  - component: {fileID: 503784425645798134}
+  - component: {fileID: 2645054067990253693}
   m_Layer: 5
   m_Name: Item2
   m_TagString: Untagged
@@ -566,7 +566,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &503784425645798134
+--- !u!114 &2645054067990253693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -578,40 +578,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RecordTypes: 3
+  RecordTypes: 2
   GameObjectStatus:
-    ActiveSelf: 1
+    ActiveSelf: 0
   TransformStatus:
-    LocalPosition: {x: 680, y: -50, z: 0}
+    LocalPosition: {x: 380, y: -50, z: 0}
     LocalRotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   Records:
   - StatusItem:
-      Name: 666
+      Name: 123
       Targets:
-      - {fileID: 1301465939674304944}
-      - {fileID: 503784425645798134}
+      - {fileID: 8817017626258601946}
+      - {fileID: 2645054067990253693}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 3
+    RecordTypes: 2
     AllStatusSwitcherComponent:
       gameObject:
-        ActiveSelf: 1
+        ActiveSelf: 0
       transform:
-        LocalPosition: {x: 380, y: -50, z: 0}
+        LocalPosition: {x: 680, y: -50, z: 0}
         LocalRotation: {x: 0, y: 0, z: 0, w: 1}
         LocalScale: {x: 1, y: 1, z: 1}
   - StatusItem:
-      Name: 123
+      Name: 666
       Targets:
-      - {fileID: 1301465939674304944}
-      - {fileID: 503784425645798134}
+      - {fileID: 8817017626258601946}
+      - {fileID: 2645054067990253693}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 3
+    RecordTypes: 2
     AllStatusSwitcherComponent:
       gameObject:
-        ActiveSelf: 1
+        ActiveSelf: 0
       transform:
-        LocalPosition: {x: 680, y: -50, z: 0}
+        LocalPosition: {x: 380, y: -50, z: 0}
         LocalRotation: {x: 0, y: 0, z: 0, w: 1}
         LocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &5994897256906719396
@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: 1469148007724004249}
   - component: {fileID: 42437849938297577}
   - component: {fileID: 7333153462808719202}
-  - component: {fileID: 1301465939674304944}
+  - component: {fileID: 8817017626258601946}
   m_Layer: 5
   m_Name: Item1
   m_TagString: Untagged
@@ -640,10 +640,10 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5994897256906719396}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 852068120055300567}
   m_Father: {fileID: 5367086243965727576}
@@ -691,7 +691,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1301465939674304944
+--- !u!114 &8817017626258601946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -705,31 +705,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RecordTypes: 2
   GameObjectStatus:
-    ActiveSelf: 1
+    ActiveSelf: 0
   TransformStatus:
-    LocalPosition: {x: -405.3, y: -158.5, z: 0}
-    LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+    LocalPosition: {x: -380, y: -50, z: 0}
+    LocalRotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   Records:
   - StatusItem:
-      Name: 666
-      Targets:
-      - {fileID: 1301465939674304944}
-      - {fileID: 503784425645798134}
-      StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 3
-    AllStatusSwitcherComponent:
-      gameObject:
-        ActiveSelf: 1
-      transform:
-        LocalPosition: {x: -380, y: -50, z: 0}
-        LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-        LocalScale: {x: 1, y: 1, z: 1}
-  - StatusItem:
       Name: 123
       Targets:
-      - {fileID: 1301465939674304944}
-      - {fileID: 503784425645798134}
+      - {fileID: 8817017626258601946}
       StatusSwitcher: {fileID: 5236466835000511476}
     RecordTypes: 3
     AllStatusSwitcherComponent:
@@ -737,7 +722,20 @@ MonoBehaviour:
         ActiveSelf: 1
       transform:
         LocalPosition: {x: -680, y: -50, z: 0}
-        LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+        LocalScale: {x: 1, y: 1, z: 1}
+  - StatusItem:
+      Name: 666
+      Targets:
+      - {fileID: 8817017626258601946}
+      StatusSwitcher: {fileID: 5236466835000511476}
+    RecordTypes: 2
+    AllStatusSwitcherComponent:
+      gameObject:
+        ActiveSelf: 0
+      transform:
+        LocalPosition: {x: -380, y: -50, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
         LocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &6490976505534475424
 GameObject:
@@ -790,15 +788,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StatusList:
-  - Name: 666
-    Targets:
-    - {fileID: 1301465939674304944}
-    - {fileID: 503784425645798134}
-    StatusSwitcher: {fileID: 5236466835000511476}
   - Name: 123
     Targets:
-    - {fileID: 1301465939674304944}
-    - {fileID: 503784425645798134}
+    - {fileID: 8817017626258601946}
+    - {fileID: 2645054067990253693}
+    StatusSwitcher: {fileID: 5236466835000511476}
+  - Name: 666
+    Targets:
+    - {fileID: 8817017626258601946}
+    - {fileID: 2645054067990253693}
     StatusSwitcher: {fileID: 5236466835000511476}
   SwitcherTargetList: []
 --- !u!1 &6549373054899784437
