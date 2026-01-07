@@ -80,14 +80,15 @@ namespace Icy.UI
 				{
 					bool result = Targets[i].SwitchTo(this);
 					if (!succeed)
-						succeed = true;
+						succeed = result;
 				}
 			}
 
-#if UNITY_EDITOR
 			if (!succeed)
-				Log.Error("未执行任何状态切换，Status = " + Name);
-#endif
+			{
+				string switcherGoName = StatusSwitcher == null ? "null" : StatusSwitcher.gameObject.name;
+				Log.Error($"Apply status failed, {nameof(UI.StatusSwitcher)} gameObject = {switcherGoName}, status name = {Name}");
+			}
 		}
 
 #if UNITY_EDITOR
