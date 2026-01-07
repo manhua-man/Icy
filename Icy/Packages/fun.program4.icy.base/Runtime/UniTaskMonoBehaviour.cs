@@ -24,8 +24,9 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 包装UniTask具有CancellationToken形参的常用API，将其中的CancellationToken参数设置为
-	/// 和MonoBehaviour生命周期相关的Token，以达到GameObject Destroy、Disable时，UniTask相关的操作可以自动中断；
+	/// 包装UniTask具有CancellationToken形参的常用API、以及Icy.Base.Timer，
+	/// 将其中的CancellationToken参数设置为和MonoBehaviour生命周期相关的Token，
+	/// 以达到GameObject Destroy、Disable时，UniTask、Icy.Base.Timer相关的操作可以自动中断；
 	/// 同时也支持外部传入一个额外的Token，以到达主动控制；
 	/// 注意：派生类如果自己实现了OnEnable、OnDisable、OnDestroy的话，必须调用基类实现
 	/// </summary>

@@ -23,7 +23,10 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 提供延迟执行、重复执行等常见计时器功能
+	/// 提供延迟执行、重复执行等常见计时器功能；
+	/// 
+	/// 注意：如果是想要在<see cref="UniTaskMonoBehaviour"/>的派生类中使用Timer，
+	/// 请优先使用<see cref="UniTaskMonoBehaviour"/>中封装好的，而不是直接使用本类
 	/// </summary>
 	public static class Timer
 	{
