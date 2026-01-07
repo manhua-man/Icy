@@ -74,6 +74,15 @@ namespace Icy.UI
 		[BoxGroup("Transform")]
 		public TransformStatus TransformStatus;
 
+		/// <summary>
+		/// RectTransform类型的状态
+		/// </summary>
+#if UNITY_EDITOR
+		[ShowIf(nameof(NeedShowRectTransform))]
+#endif
+		[BoxGroup("RectTransform")]
+		public RectTransformStatus RectTransformStatus;
+
 		//New Status stub
 
 #if UNITY_EDITOR
@@ -109,6 +118,7 @@ namespace Icy.UI
 
 					TryToApply(all.gameObject, i, StatusSwitcherRecordType.GameObject);
 					TryToApply(all.transform, i, StatusSwitcherRecordType.Transform);
+					TryToApply(all.rectTransform, i, StatusSwitcherRecordType.RectTransform);
 
 					//New Status stub
 					return true;
@@ -240,6 +250,14 @@ namespace Icy.UI
 						TransformStatus = null;
 					break;
 				case StatusSwitcherRecordType.RectTransform:
+					if (has)
+					{
+						RectTransformStatus = new RectTransformStatus();
+						InitStatusSingle(RectTransformStatus, StatusSwitcherRecordType.RectTransform
+							, record.AllStatusSwitcherComponent.rectTransform);
+					}
+					else
+						RectTransformStatus = null;
 					break;
 				default:
 					break;
@@ -290,6 +308,7 @@ namespace Icy.UI
 					record.AllStatusSwitcherComponent.transform = has ? TransformStatus : null;
 					break;
 				case StatusSwitcherRecordType.RectTransform:
+					record.AllStatusSwitcherComponent.rectTransform = has ? RectTransformStatus : null;
 					break;
 				default:
 					break;
@@ -390,8 +409,10 @@ namespace Icy.UI
 		{
 			GameObjectStatus?.Dispose();
 			TransformStatus?.Dispose();
+			RectTransformStatus?.Dispose();
 			GameObjectStatus = null;
 			TransformStatus = null;
+			RectTransformStatus = null;
 			//New Status stub
 		}
 	}
@@ -442,6 +463,7 @@ namespace Icy.UI
 	{
 		public GameObjectStatus gameObject;
 		public TransformStatus transform;
+		public RectTransformStatus rectTransform;
 		//New Status stub
 	}
 }

@@ -578,13 +578,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RecordTypes: 2
+  RecordTypes: 4
   GameObjectStatus:
     ActiveSelf: 0
   TransformStatus:
     LocalPosition: {x: 380, y: -50, z: 0}
     LocalRotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
+  RectTransformStatus:
+    AnchorMin: {x: 0.5, y: 0.5}
+    AnchorMax: {x: 0.5, y: 0.5}
+    AnchoredPosition: {x: 380, y: -50}
+    SizeDelta: {x: 500, y: 300}
+    Pivot: {x: 0.5, y: 0.5}
   Records:
   - StatusItem:
       Name: 123
@@ -592,28 +598,40 @@ MonoBehaviour:
       - {fileID: 8817017626258601946}
       - {fileID: 2645054067990253693}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 4
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 0
       transform:
-        LocalPosition: {x: 680, y: -50, z: 0}
-        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-        LocalScale: {x: 1, y: 1, z: 1}
+        LocalPosition: {x: 0, y: 0, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 0}
+        LocalScale: {x: 0, y: 0, z: 0}
+      rectTransform:
+        AnchorMin: {x: 0.5, y: 0.5}
+        AnchorMax: {x: 0.5, y: 0.5}
+        AnchoredPosition: {x: 680, y: -50}
+        SizeDelta: {x: 500, y: 300}
+        Pivot: {x: 0.5, y: 0.5}
   - StatusItem:
       Name: 666
       Targets:
       - {fileID: 8817017626258601946}
       - {fileID: 2645054067990253693}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 4
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 0
       transform:
-        LocalPosition: {x: 380, y: -50, z: 0}
-        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-        LocalScale: {x: 1, y: 1, z: 1}
+        LocalPosition: {x: 0, y: 0, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 0}
+        LocalScale: {x: 0, y: 0, z: 0}
+      rectTransform:
+        AnchorMin: {x: 0.5, y: 0.5}
+        AnchorMax: {x: 0.5, y: 0.5}
+        AnchoredPosition: {x: 380, y: -50}
+        SizeDelta: {x: 500, y: 300}
+        Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5994897256906719396
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,40 +721,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RecordTypes: 2
+  RecordTypes: 4
   GameObjectStatus:
     ActiveSelf: 0
   TransformStatus:
     LocalPosition: {x: -380, y: -50, z: 0}
     LocalRotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
+  RectTransformStatus:
+    AnchorMin: {x: 0.5, y: 0.5}
+    AnchorMax: {x: 0.5, y: 0.5}
+    AnchoredPosition: {x: -380, y: -50}
+    SizeDelta: {x: 500, y: 300}
+    Pivot: {x: 0.5, y: 0.5}
   Records:
   - StatusItem:
       Name: 123
       Targets:
       - {fileID: 8817017626258601946}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 3
+    RecordTypes: 5
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 1
       transform:
-        LocalPosition: {x: -680, y: -50, z: 0}
-        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-        LocalScale: {x: 1, y: 1, z: 1}
+        LocalPosition: {x: 0, y: 0, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 0}
+        LocalScale: {x: 0, y: 0, z: 0}
+      rectTransform:
+        AnchorMin: {x: 0.5, y: 0.5}
+        AnchorMax: {x: 0.5, y: 0.5}
+        AnchoredPosition: {x: -680, y: -50}
+        SizeDelta: {x: 500, y: 300}
+        Pivot: {x: 0.5, y: 0.5}
   - StatusItem:
       Name: 666
       Targets:
       - {fileID: 8817017626258601946}
       StatusSwitcher: {fileID: 5236466835000511476}
-    RecordTypes: 2
+    RecordTypes: 4
     AllStatusSwitcherComponent:
       gameObject:
         ActiveSelf: 0
       transform:
-        LocalPosition: {x: -380, y: -50, z: 0}
-        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-        LocalScale: {x: 1, y: 1, z: 1}
+        LocalPosition: {x: 0, y: 0, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 0}
+        LocalScale: {x: 0, y: 0, z: 0}
+      rectTransform:
+        AnchorMin: {x: 0.5, y: 0.5}
+        AnchorMax: {x: 0.5, y: 0.5}
+        AnchoredPosition: {x: -380, y: -50}
+        SizeDelta: {x: 500, y: 300}
+        Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6490976505534475424
 GameObject:
   m_ObjectHideFlags: 0

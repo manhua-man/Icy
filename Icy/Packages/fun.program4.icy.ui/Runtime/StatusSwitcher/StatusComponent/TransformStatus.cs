@@ -45,17 +45,17 @@ namespace Icy.UI
 		[InlineButton(nameof(RecordScale), "Record")]
 		public Vector3 LocalScale;
 
-		private void RecordPos()
+		protected void RecordPos()
 		{
 			LocalPosition = Target.transform.localPosition;
 		}
 
-		private void RecordRotation()
+		protected void RecordRotation()
 		{
 			LocalRotation = Target.transform.localRotation;
 		}
 
-		private void RecordScale()
+		protected void RecordScale()
 		{
 			LocalScale = Target.transform.localScale;
 		}
