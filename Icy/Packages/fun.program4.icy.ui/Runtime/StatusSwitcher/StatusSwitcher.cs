@@ -51,13 +51,14 @@ namespace Icy.UI
 		[ShowInInspector]
 		[HideLabel]
 		[NonSerialized]
-		protected string _InputName;
+		internal string InputName;
 
 		/// <summary>
 		/// 点击添加新Status的按钮
 		/// </summary>
 		[PropertySpace(0, 20)]
 		[BoxGroup("状态列表")]
+		[HideIf(nameof(IsEditingAnyStatus))]
 		[EnableIf(nameof(IsValidName))]
 		[HorizontalGroup("状态列表/Add")]
 		[Button("Add Status", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
@@ -68,22 +69,47 @@ namespace Icy.UI
 
 			for (int i = 0; i < StatusList.Count; i++)
 			{
-				if (StatusList[i].Name == _InputName)
+				if (StatusList[i].Name == InputName)
 				{
-					string msg = $"重复的Status名字：{_InputName}";
+					string msg = $"重复的Status名字：{InputName}";
 					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
 					return;
 				}
 			}
 
-			StatusList.Add(new StatusSwitcherItem(this, _InputName));
-			_InputName = null;
+			StatusList.Add(new StatusSwitcherItem(this, InputName));
+			InputName = null;
+		}
+
+		/// <summary>
+		/// Status改名按钮
+		/// </summary>
+		[PropertySpace(0, 20)]
+		[BoxGroup("状态列表")]
+		[ShowIf(nameof(IsEditingAnyStatus))]
+		[EnableIf(nameof(IsValidName))]
+		[HorizontalGroup("状态列表/Add")]
+		[Button("Rename", ButtonSizes.Medium, Icon = SdfIconType.VectorPen)]
+		protected void RenameStatus()
+		{
+			//更新Target上序列化的状态里的名字
+			for (int t = 0; t < SwitcherTargetList.Count; t++)
+			{
+				List<StatusSwitcherRecord> record = SwitcherTargetList[t].Records;
+				for (int r = 0; r < record.Count; r++)
+				{
+					if (record[r].StatusItem.Name == CurrDirtyStatus.Name)
+						record[r].StatusItem.Name = InputName;
+				}
+			}
+
+			CurrDirtyStatus.Name = InputName;
 		}
 #endif
 
 		//控制的所有节点
 #if UNITY_EDITOR
-		[ShowIf(nameof(NeedShowTargetList))]
+		[ShowIf(nameof(IsEditingAnyStatus))]
 #endif
 		[FoldoutGroup("控制的节点")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
@@ -101,7 +127,7 @@ namespace Icy.UI
 
 #if UNITY_EDITOR
 		//添加新的Target
-		[ShowIf(nameof(NeedShowTargetList))]
+		[ShowIf(nameof(IsEditingAnyStatus))]
 		[FoldoutGroup("控制的节点")]
 		[Button("Add Target", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
 		protected void AddNewTarget()
@@ -176,14 +202,14 @@ namespace Icy.UI
 		[NonSerialized]
 		protected StatusSwitcherTarget _CurrSelectTarget;
 
-		protected bool NeedShowTargetList()
+		protected bool IsEditingAnyStatus()
 		{
 			return CurrDirtyStatus != null;
 		}
 
 		protected bool IsValidName()
 		{
-			return !string.IsNullOrEmpty(_InputName);
+			return !string.IsNullOrEmpty(InputName);
 		}
 
 		/// <summary>

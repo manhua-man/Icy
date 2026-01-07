@@ -125,6 +125,7 @@ namespace Icy.UI
 			Targets = StatusSwitcher.SwitcherTargetList;
 			StatusSwitcher.SwitcherTargetList = null;
 			StatusSwitcher.CurrDirtyStatus = null;
+			StatusSwitcher.InputName = null;
 			_IsDirty = false;
 		}
 #endif
