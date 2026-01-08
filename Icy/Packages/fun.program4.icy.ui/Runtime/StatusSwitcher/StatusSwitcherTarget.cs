@@ -38,6 +38,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 用下拉列表选择StatusItem
 		/// </summary>
+		[Title("所属状态")]
 		[ValueDropdown(nameof(_StatusItems), IsUniqueList = true, DropdownWidth = 200)]
 		[OnValueChanged(nameof(OnStatusItemDropdownChanged))]
 		[ShowInInspector]
@@ -45,7 +46,7 @@ namespace Icy.UI
 #endif
 
 		[PropertySpace(10, 10)]
-		[Title("此节点要记录哪些类型的状态")]
+		[Title("此节点记录的状态类型")]
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRecordTypes))]
 		[OnInspectorInit(nameof(OnInspectorInit))]
@@ -62,7 +63,8 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowGameObject))]
 #endif
-		[BoxGroup("GameObject")]
+		[TitleGroup("Status List", "修改这里的值会自动同步到物体上，修改物体上的值《不会》自动同步到这里，需要自己点一下右侧的Record按钮")]
+		[BoxGroup("Status List/GameObject")]
 		public GameObjectStatus GameObjectStatus;
 
 		/// <summary>
@@ -71,7 +73,7 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowTransform))]
 #endif
-		[BoxGroup("Transform")]
+		[BoxGroup("Status List/Transform")]
 		public TransformStatus TransformStatus;
 
 		/// <summary>
@@ -80,7 +82,7 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRectTransform))]
 #endif
-		[BoxGroup("RectTransform")]
+		[BoxGroup("Status List/RectTransform")]
 		public RectTransformStatus RectTransformStatus;
 
 		//New Status stub
@@ -89,7 +91,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 受这些StatusSwitcher的控制
 		/// </summary>
-		[Title("所属StatusSwitcher列表（双击跳转）")]
+		[Title("所属StatusSwitcher列表（双击可跳转）")]
 		[ListDrawerSettings(ShowItemCount = true, ShowFoldout = false, IsReadOnly = true)]
 		[PropertySpace(10, 20)]
 		[ShowInInspector]
