@@ -131,7 +131,11 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		protected MethodInfo _DrawLayoutMode;
 		protected UnityEditor.SerializedObject _SerializedObject;
+		protected UnityEditor.PopupWindowContent _AnchorPresetdPopup;
 
+		/// <summary>
+		/// 显示RectTransform的锚框选择窗口
+		/// </summary>
 		protected void ShowAnchorPresetPopup(RectTransform rectTransform)
 		{
 			// 获取 RectTransformEditor 类型
@@ -153,8 +157,8 @@ namespace Icy.UI
 				UnityEditor.SerializedObject serializedObject = new UnityEditor.SerializedObject(Target.transform);
 
 				object obj = Activator.CreateInstance(rectTransformEditorType, new object[] { serializedObject });
-				UnityEditor.PopupWindowContent anchorPresetPopup = obj as UnityEditor.PopupWindowContent;
-				UnityEditor.PopupWindow.Show(dropdownPosition, anchorPresetPopup);
+				_AnchorPresetdPopup = obj as UnityEditor.PopupWindowContent;
+				UnityEditor.PopupWindow.Show(dropdownPosition, _AnchorPresetdPopup);
 			}
 			catch (ExitGUIException)
 			{
@@ -164,6 +168,9 @@ namespace Icy.UI
 			{
 				Log.Error($"ShowAnchorPresetPopup exception, {e}", nameof(RectTransformStatus));
 			}
+
+			UnityEditor.EditorApplication.update -= CheckAnchorPresetdPopupStatus;
+			UnityEditor.EditorApplication.update += CheckAnchorPresetdPopupStatus;
 		}
 
 		/// <summary>
@@ -204,6 +211,23 @@ namespace Icy.UI
 			object[] typeArgs = new object[] { new RectOffset(7, 7, 7, 7).Remove(dropdownPosition)
 											, m_AnchorMin, m_AnchorMax, m_AnchoredPosition, m_SizeDelta };
 			_DrawLayoutMode.Invoke(null, typeArgs);
+		}
+
+		/// <summary>
+		/// 检查AnchorPresetdPopup窗口状态，监听关闭时机
+		/// </summary>
+		protected void CheckAnchorPresetdPopupStatus()
+		{
+			if (_AnchorPresetdPopup == null || _AnchorPresetdPopup.editorWindow == null)
+			{
+				UnityEditor.EditorApplication.update -= CheckAnchorPresetdPopupStatus;
+				OnAnchorPresetdPopupClosed();
+			}
+		}
+
+		protected void OnAnchorPresetdPopupClosed()
+		{
+			Record();
 		}
 	}
 #endif
