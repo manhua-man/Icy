@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 基于FSM实现的Procedure，用于用按任意顺序组合Step，然后执行
+	/// 基于FSM实现的Procedure，方便按任意顺序组合Step，然后执行
 	/// </summary>
 	public sealed class Procedure
 	{
