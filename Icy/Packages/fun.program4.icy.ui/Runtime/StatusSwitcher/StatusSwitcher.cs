@@ -110,9 +110,10 @@ namespace Icy.UI
 		//控制的所有节点
 #if UNITY_EDITOR
 		[ShowIf(nameof(IsEditingAnyStatus))]
-#endif
 		[FoldoutGroup("控制的节点")]
-		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
+		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true
+							, CustomRemoveIndexFunction = nameof(DeleteTargetIdx))]
+#endif
 		[SerializeField]
 		internal List<StatusSwitcherTarget> SwitcherTargetList;
 
@@ -244,6 +245,27 @@ namespace Icy.UI
 			}
 
 			StatusList.RemoveAt(idx);
+			return true;
+		}
+
+		/// <summary>
+		/// 删除Target的处理
+		/// </summary>
+		protected bool DeleteTargetIdx(int idx)
+		{
+			bool shouldDelete = UnityEditor.EditorUtility.DisplayDialog(""
+				, $"确定删除 {SwitcherTargetList[idx].gameObject.name} 吗？", "确定", "取消");
+			if (!shouldDelete)
+				return false;
+
+			StatusSwitcherTarget targetToRemove = SwitcherTargetList[idx];
+			for (int i = targetToRemove.Records.Count - 1; i >= 0; i--)
+			{
+				if (targetToRemove.Records[i].StatusItem.StatusSwitcher == this)
+					targetToRemove.Records.RemoveAt(i);
+			}
+
+			SwitcherTargetList.RemoveAt(idx);
 			return true;
 		}
 #endif
