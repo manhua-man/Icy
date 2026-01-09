@@ -229,6 +229,6 @@ namespace Icy.UI
 		{
 			Record();
 		}
-	}
 #endif
+	}
 }
