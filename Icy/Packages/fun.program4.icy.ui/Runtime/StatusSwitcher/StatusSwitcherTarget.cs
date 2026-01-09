@@ -96,12 +96,19 @@ namespace Icy.UI
 		[PropertySpace(10, 20)]
 		[ShowInInspector]
 		protected List<StatusSwitcher> StatusSwitchers;
+
+		[ShowInInspector]
+		[LabelWidth(50)]
+		protected bool _Debug = false;
 #endif
 
 		/// <summary>
 		/// 节点的记录数据
 		/// </summary>
 		[SerializeField]
+#if UNITY_EDITOR
+		[ShowIf(nameof(_Debug))]
+#endif
 		[ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = false, HideAddButton = true)]
 		internal List<StatusSwitcherRecord> Records;
 
@@ -187,6 +194,8 @@ namespace Icy.UI
 					_StatusItems.Add(key);
 				}
 			}
+
+			_Debug = false;
 		}
 
 		protected void OnStatusItemDropdownChanged()
