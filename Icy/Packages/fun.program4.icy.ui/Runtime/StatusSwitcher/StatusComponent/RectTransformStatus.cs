@@ -178,6 +178,9 @@ namespace Icy.UI
 		/// </summary>
 		protected void DrawAnchorIcon()
 		{
+			if (Target == null)
+				return;
+
 			Rect dropdownPosition = GUILayoutUtility.GetRect(0, 0);
 			dropdownPosition.height = 49;
 			dropdownPosition.width = 49;

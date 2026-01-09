@@ -38,9 +38,10 @@ namespace Icy.UI
 		/// <summary>
 		/// 用下拉列表选择StatusItem
 		/// </summary>
-		[Title("所属状态")]
+		[Title("所属StatusItem")]
 		[ValueDropdown(nameof(_StatusItems), IsUniqueList = true, DropdownWidth = 200)]
 		[OnValueChanged(nameof(OnStatusItemDropdownChanged))]
+		[ShowIf(nameof(HasAddedToAnyStatusItem))]
 		[ShowInInspector]
 		internal string StatusItemName = NONE;
 #endif
@@ -49,7 +50,7 @@ namespace Icy.UI
 		[Title("此节点记录的状态类型")]
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRecordTypes))]
-		[OnInspectorInit(nameof(OnInspectorInit))]
+		[OnInspectorInit(nameof(Init))]
 		[OnInspectorDispose(nameof(OnInspectorDispose))]
 		[OnValueChanged(nameof(OnRecordTypesChanged))]
 #endif
@@ -93,11 +94,13 @@ namespace Icy.UI
 		/// </summary>
 		[Title("所属StatusSwitcher列表（双击可跳转）")]
 		[ListDrawerSettings(ShowItemCount = true, ShowFoldout = false, IsReadOnly = true)]
+		[ShowIf(nameof(HasAddedToAnyStatusItem))]
 		[PropertySpace(10, 20)]
 		[ShowInInspector]
 		protected List<StatusSwitcher> StatusSwitchers;
 
 		[ShowInInspector]
+		[ShowIf(nameof(HasAddedToAnyStatusItem))]
 		[LabelWidth(50)]
 		protected bool _Debug = false;
 #endif
@@ -153,8 +156,9 @@ namespace Icy.UI
 		/// </summary>
 		internal const string NONE = "None";
 
-		protected void OnInspectorInit()
+		protected void Init()
 		{
+			_PotentialStatusSwitchers = new List<StatusSwitcher>();
 			StatusSwitchers = new List<StatusSwitcher>();
 			Transform uiBaseTrans = CommonUtility.GetAncestor(transform, FindUIBase);
 			if (uiBaseTrans != null)
@@ -179,6 +183,8 @@ namespace Icy.UI
 							}
 						}
 					}
+
+					_PotentialStatusSwitchers.Add(switchers[sw]);
 				}
 			}
 
@@ -195,7 +201,37 @@ namespace Icy.UI
 				}
 			}
 
+			_StatusSwitcherToAdd = null;
+			_StatusSwitcherItemToAdd = null;
 			_Debug = false;
+		}
+
+		/// <summary>
+		/// 尝试添加一个Record
+		/// </summary>
+		protected void TryToAddRecord(StatusSwitcherItem statusItem)
+		{
+			if (Records == null)
+				Records = new List<StatusSwitcherRecord>();
+
+			bool has = false;
+			for (int i = 0; i < Records.Count; i++)
+			{
+				if (Records[i].StatusItem == statusItem)
+				{
+					has = true;
+					break;
+				}
+			}
+
+			if (!has)
+			{
+				StatusSwitcherRecord newRecord = new StatusSwitcherRecord();
+				newRecord.StatusItem = statusItem;
+				newRecord.RecordTypes = StatusSwitcherRecordType.None;
+				newRecord.AllStatusSwitcherComponent = new AllStatusSwitcherComponent();
+				Records.Add(newRecord);
+			}
 		}
 
 		protected void OnStatusItemDropdownChanged()
@@ -327,33 +363,60 @@ namespace Icy.UI
 			//New Status stub
 		}
 
+		#region 添加到StatusSwitcher
 		/// <summary>
-		/// 尝试添加一个Record
+		/// UI所有的StatusSwitcher
 		/// </summary>
-		protected void TryToAddRecord(StatusSwitcherItem statusItem)
-		{
-			if (Records == null)
-				Records = new List<StatusSwitcherRecord>();
+		protected List<StatusSwitcher> _PotentialStatusSwitchers;
 
-			bool has = false;
-			for (int i = 0; i < Records.Count; i++)
+		[Title("选择StatusSwitcher")]
+		[ValueDropdown(nameof(_PotentialStatusSwitchers), IsUniqueList = true, DropdownWidth = 200)]
+		[OnValueChanged(nameof(OnStatusSwitcherSelected))]
+		[HideIf(nameof(HasAddedToAnyStatusItem))]
+		[ShowInInspector]
+		protected StatusSwitcher _StatusSwitcherToAdd;
+
+		/// <summary>
+		/// 当前选择的StatusSwitcher的所有StatusSwitcherItem
+		/// </summary>
+		protected List<string> _PotentialStatusSwitcherItems;
+
+		[Title("选择StatusSwitcherItem")]
+		[ValueDropdown(nameof(_PotentialStatusSwitcherItems), IsUniqueList = true, DropdownWidth = 200)]
+		[HideIf(nameof(HasAddedToAnyStatusItem))]
+		[ShowInInspector]
+		protected string _StatusSwitcherItemToAdd;
+
+		protected void OnStatusSwitcherSelected()
+		{
+			_PotentialStatusSwitcherItems = new List<string>();
+			for (int i = 0; i < _StatusSwitcherToAdd.StatusList.Count; i++)
+				_PotentialStatusSwitcherItems.Add(_StatusSwitcherToAdd.StatusList[i].Name);
+			_StatusSwitcherItemToAdd = null;
+		}
+
+		/// <summary>
+		/// 将本Target，添加到一个StatusSwitcher的StatusItem中
+		/// </summary>
+		[PropertySpace(10)]
+		[HideIf(nameof(HasAddedToAnyStatusItem))]
+		[Button("Add To StatusItem", Icon = SdfIconType.PlusCircleFill, ButtonHeight = (int)ButtonSizes.Medium)]
+		protected void AddToStatusItem()
+		{
+			for (int i = 0; i < _StatusSwitcherToAdd.StatusList.Count; i++)
 			{
-				if (Records[i].StatusItem == statusItem)
+				if (_StatusSwitcherToAdd.StatusList[i].Name == _StatusSwitcherItemToAdd)
 				{
-					has = true;
+					_StatusSwitcherToAdd.StatusList[i].Targets.Add(this);
+
+					StatusItemName = null;
+					RecordTypes = StatusSwitcherRecordType.None;
+					Init();
 					break;
 				}
 			}
-
-			if (!has)
-			{
-				StatusSwitcherRecord newRecord = new StatusSwitcherRecord();
-				newRecord.StatusItem = statusItem;
-				newRecord.RecordTypes = StatusSwitcherRecordType.None;
-				newRecord.AllStatusSwitcherComponent = new AllStatusSwitcherComponent();
-				Records.Add(newRecord);
-			}
 		}
+		#endregion
 
 		protected void ForeachRecordTypes(Action<StatusSwitcherRecordType> callback)
 		{
@@ -388,9 +451,14 @@ namespace Icy.UI
 			return false;
 		}
 
+		protected bool HasAddedToAnyStatusItem()
+		{
+			return _StatusItems!= null && _StatusItems.Count > 1; //里面默认有一个NONE，所以是1
+		}
+
 		protected bool NeedShowRecordTypes()
 		{
-			return !string.IsNullOrEmpty(StatusItemName) && StatusItemName != NONE;
+			return !string.IsNullOrEmpty(StatusItemName) && StatusItemName != NONE && HasAddedToAnyStatusItem();
 		}
 
 		protected bool NeedShowGameObject()
