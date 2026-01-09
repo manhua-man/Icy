@@ -18,6 +18,7 @@
 using Icy.Base;
 using Sirenix.OdinInspector;
 using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace Icy.UI
@@ -29,6 +30,14 @@ namespace Icy.UI
 	[Serializable]
 	public class RectTransformStatus : StatusSwitcherStatusBase
 	{
+#if UNITY_EDITOR
+		[OnInspectorGUI(nameof(DrawAnchorIcon), true)]
+		[PropertySpace(-20, 50)]
+		[DisplayAsString]
+		[HideLabel]
+		protected string dummy;
+#endif
+
 		[InlineProperty]
 		[SerializeField]
 		[OnValueChanged(nameof(Apply))]
@@ -59,12 +68,6 @@ namespace Icy.UI
 		[InlineButton(nameof(RecordPivot), "Record")]
 		public Vector2 Pivot;
 
-
-		[Button("Anchor")]
-		protected void ChangeAnchor()
-		{
-			ShowAnchorPresetPopup(Target.transform as RectTransform);
-		}
 
 		protected void RecordAnchorMin()
 		{
@@ -126,21 +129,24 @@ namespace Icy.UI
 		}
 
 #if UNITY_EDITOR
+		protected MethodInfo _DrawLayoutMode;
+		protected UnityEditor.SerializedObject _SerializedObject;
+
 		protected void ShowAnchorPresetPopup(RectTransform rectTransform)
 		{
 			// 获取 RectTransformEditor 类型
 			Type rectTransformEditorType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.LayoutDropdownWindow");
 			if (rectTransformEditorType == null)
 			{
-				Debug.LogError("无法找到 LayoutDropdownWindow 类型");
+				Debug.LogError("Can not GetType LayoutDropdownWindow");
 				return;
 			}
 
 			try
 			{
 				Rect dropdownPosition = GUILayoutUtility.GetRect(0, 0);
-				dropdownPosition.x += 2;
-				dropdownPosition.y += 17;
+				dropdownPosition.x += 26;
+				dropdownPosition.y -= 110;
 				dropdownPosition.height = 49;
 				dropdownPosition.width = 49;
 
@@ -150,14 +156,54 @@ namespace Icy.UI
 				UnityEditor.PopupWindowContent anchorPresetPopup = obj as UnityEditor.PopupWindowContent;
 				UnityEditor.PopupWindow.Show(dropdownPosition, anchorPresetPopup);
 			}
-			catch(Exception e)
+			catch (ExitGUIException)
 			{
-				Log.Error($"ShowAnchorPresetPopup failed, {e}", nameof(RectTransformStatus));
+				//这里会报一个这个异常，不影响使用，不输出log了
 			}
-			finally
+			catch (Exception e)
 			{
+				Log.Error($"ShowAnchorPresetPopup exception, {e}", nameof(RectTransformStatus));
+			}
+		}
 
+		/// <summary>
+		/// 显示RectTransform那个锚框图标
+		/// </summary>
+		protected void DrawAnchorIcon()
+		{
+			Rect dropdownPosition = GUILayoutUtility.GetRect(0, 0);
+			dropdownPosition.height = 49;
+			dropdownPosition.width = 49;
+
+			using (new UnityEditor.EditorGUI.DisabledScope(false))
+			{
+				if (UnityEditor.EditorGUI.DropdownButton(dropdownPosition, GUIContent.none, FocusType.Passive, "label"))
+				{
+					GUIUtility.keyboardControl = 0;
+					ShowAnchorPresetPopup(Target.transform as RectTransform);
+				}
 			}
+
+			if (_DrawLayoutMode == null)
+			{
+				Type rectTransformEditorType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.LayoutDropdownWindow");
+				Type spType = typeof(UnityEditor.SerializedProperty);
+				_DrawLayoutMode = rectTransformEditorType.GetMethod("DrawLayoutMode", BindingFlags.Static | BindingFlags.NonPublic, null
+					, new Type[] { typeof(Rect), spType, spType, spType, spType }, null);
+			}
+
+			if (_SerializedObject == null)
+				_SerializedObject = new UnityEditor.SerializedObject(Target.transform);
+
+			UnityEditor.SerializedProperty m_AnchorMin = _SerializedObject.FindProperty("m_AnchorMin");
+			UnityEditor.SerializedProperty m_AnchorMax = _SerializedObject.FindProperty("m_AnchorMax");
+			UnityEditor.SerializedProperty m_AnchoredPosition = _SerializedObject.FindProperty("m_AnchoredPosition");
+			UnityEditor.SerializedProperty m_SizeDelta = _SerializedObject.FindProperty("m_SizeDelta");
+			UnityEditor.SerializedProperty m_Pivot = _SerializedObject.FindProperty("m_Pivot");
+
+			object[] typeArgs = new object[] { new RectOffset(7, 7, 7, 7).Remove(dropdownPosition)
+											, m_AnchorMin, m_AnchorMax, m_AnchoredPosition, m_SizeDelta };
+			_DrawLayoutMode.Invoke(null, typeArgs);
 		}
 	}
 #endif
