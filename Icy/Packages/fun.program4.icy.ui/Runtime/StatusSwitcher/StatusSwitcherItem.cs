@@ -73,22 +73,34 @@ namespace Icy.UI
 		[Button("$_DisplayName", ButtonSizes.Medium)]
 		internal void Apply()
 		{
-			bool succeed = false;
-			if (Targets != null)
+			bool succeed = true;
+			if (Targets == null || Targets.Count == 0)
+				succeed = false;
+			else
 			{
 				for (int i = 0; i < Targets.Count; i++)
 				{
-					bool result = Targets[i].SwitchTo(this);
-					if (!succeed)
-						succeed = result;
+					if (Targets[i] == null)
+					{
+						string switcherGoName = GetSwitcherName();
+						Log.Error($"Target of StatusSwitcherItem is null, index = {i}, {nameof(UI.StatusSwitcher)} = {switcherGoName}, status name = {Name}");
+						succeed = false;
+					}
+					else
+						succeed &= Targets[i].SwitchTo(this);
 				}
 			}
 
 			if (!succeed)
 			{
-				string switcherGoName = StatusSwitcher == null ? "null" : StatusSwitcher.gameObject.name;
-				Log.Error($"Apply status failed, {nameof(UI.StatusSwitcher)} gameObject = {switcherGoName}, status name = {Name}");
+				string switcherName = GetSwitcherName();
+				Log.Error($"Apply status failed, {nameof(UI.StatusSwitcher)} = {switcherName}, status name = {Name}");
 			}
+		}
+
+		internal string GetSwitcherName()
+		{
+			return StatusSwitcher == null ? "null" : StatusSwitcher.ToString();
 		}
 
 #if UNITY_EDITOR

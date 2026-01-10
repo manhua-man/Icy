@@ -121,28 +121,35 @@ namespace Icy.UI
 		/// </summary>
 		internal bool SwitchTo(StatusSwitcherItem statusItem)
 		{
+			bool rtn = true;
 			for (int i = 0; i < Records.Count; i++)
 			{
 				StatusSwitcherItem item = Records[i].StatusItem;
 				if (item == statusItem)
 				{
-					AllStatusSwitcherComponent all = Records[i].AllStatusSwitcherComponent;
-
-					TryToApply(all.gameObject, i, StatusSwitcherRecordType.GameObject);
-					TryToApply(all.transform, i, StatusSwitcherRecordType.Transform);
-					TryToApply(all.rectTransform, i, StatusSwitcherRecordType.RectTransform);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.GameObject);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.Transform);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.RectTransform);
 
 					//New Status stub
-					return true;
+					break;
 				}
 			}
-			return false;
+			return rtn;
 		}
 
-		protected bool TryToApply(StatusSwitcherStatusBase status, int idx, StatusSwitcherRecordType type)
+		protected bool TryToApply(int idx, StatusSwitcherRecordType recordType)
 		{
-			if (Records[idx].RecordTypes.HasFlag(type))
+			StatusSwitcherRecord record = Records[idx];
+			if (record.RecordTypes.HasFlag(recordType))
 			{
+				if (this == null)
+				{
+					Log.Error($"Apply {recordType} failed, is target gameObject deleted? {nameof(StatusSwitcher)} = {record.StatusItem.GetSwitcherName()}, status name = {record.StatusItem.Name}");
+					return false;
+				}
+
+				StatusSwitcherStatusBase status = GetStatusByType(record, recordType);
 				status.Init(this);
 				status.Apply();
 				return true;
@@ -249,7 +256,7 @@ namespace Icy.UI
 				RecordTypes = record.RecordTypes;
 				_PrevRecordTypes = record.RecordTypes;
 
-				ForeachRecordTypes((StatusSwitcherRecordType recordType) =>
+				ForEachRecordTypes((StatusSwitcherRecordType recordType) =>
 				{
 					InitStatus(record, recordType);
 				});
@@ -262,7 +269,7 @@ namespace Icy.UI
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 			StatusSwitcherRecord record = Records[idx];
 
-			ForeachRecordTypes((StatusSwitcherRecordType recordType) =>
+			ForEachRecordTypes((StatusSwitcherRecordType recordType) =>
 			{
 				if (!_PrevRecordTypes.HasFlag(recordType))
 					InitStatus(record, recordType);
@@ -337,7 +344,7 @@ namespace Icy.UI
 			StatusSwitcherRecord record = Records[idx];
 			record.RecordTypes = RecordTypes;
 
-			ForeachRecordTypes((StatusSwitcherRecordType recordType) => 
+			ForEachRecordTypes((StatusSwitcherRecordType recordType) => 
 			{
 				SaveSingle(record, recordType);
 			});
@@ -418,7 +425,7 @@ namespace Icy.UI
 		}
 		#endregion
 
-		protected void ForeachRecordTypes(Action<StatusSwitcherRecordType> callback)
+		protected void ForEachRecordTypes(Action<StatusSwitcherRecordType> callback)
 		{
 			Array enumValues = Enum.GetValues(typeof(StatusSwitcherRecordType));
 			foreach (StatusSwitcherRecordType e in enumValues)
@@ -437,11 +444,11 @@ namespace Icy.UI
 				case StatusSwitcherRecordType.Transform:
 					return record.AllStatusSwitcherComponent.transform;
 				case StatusSwitcherRecordType.RectTransform:
-					break;
+					return record.AllStatusSwitcherComponent.rectTransform;
+				//New Status stub
 				default:
 					return null;
 			}
-			return null;
 		}
 
 		protected bool FindUIBase(Transform trans)
