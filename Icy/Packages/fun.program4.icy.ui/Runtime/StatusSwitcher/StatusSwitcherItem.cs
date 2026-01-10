@@ -83,7 +83,7 @@ namespace Icy.UI
 					if (Targets[i] == null)
 					{
 						string switcherGoName = GetSwitcherName();
-						Log.Error($"Target of StatusSwitcherItem is null, index = {i}, {nameof(UI.StatusSwitcher)} = {switcherGoName}, status name = {Name}");
+						Log.Error($"Target of StatusSwitcherItem is null, index = {i}, {nameof(UI.StatusSwitcher)} = {switcherGoName}, status name = {Name}", nameof(StatusSwitcherItem));
 						succeed = false;
 					}
 					else
@@ -94,7 +94,7 @@ namespace Icy.UI
 			if (!succeed)
 			{
 				string switcherName = GetSwitcherName();
-				Log.Error($"Apply status failed, {nameof(UI.StatusSwitcher)} = {switcherName}, status name = {Name}");
+				Log.Error($"Apply status failed, {nameof(UI.StatusSwitcher)} = {switcherName}, status name = {Name}", nameof(StatusSwitcherItem));
 			}
 		}
 

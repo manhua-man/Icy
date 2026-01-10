@@ -51,7 +51,6 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRecordTypes))]
 		[OnInspectorInit(nameof(Init))]
-		[OnInspectorDispose(nameof(OnInspectorDispose))]
 		[OnValueChanged(nameof(OnRecordTypesChanged))]
 #endif
 		public StatusSwitcherRecordType RecordTypes;
@@ -85,6 +84,15 @@ namespace Icy.UI
 #endif
 		[BoxGroup("Status List/RectTransform")]
 		public RectTransformStatus RectTransformStatus;
+
+		/// <summary>
+		/// Animator类型的状态
+		/// </summary>
+#if UNITY_EDITOR
+		[ShowIf(nameof(NeedShowAnimator))]
+#endif
+		[BoxGroup("Status List/Animator")]
+		public AnimatorStatus AnimatorStatus;
 
 		//New Status stub
 
@@ -130,6 +138,7 @@ namespace Icy.UI
 					rtn &= TryToApply(i, StatusSwitcherRecordType.GameObject);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.Transform);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.RectTransform);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.Animator);
 
 					//New Status stub
 					break;
@@ -145,7 +154,7 @@ namespace Icy.UI
 			{
 				if (this == null)
 				{
-					Log.Error($"Apply {recordType} failed, is target gameObject deleted? {nameof(StatusSwitcher)} = {record.StatusItem.GetSwitcherName()}, status name = {record.StatusItem.Name}");
+					Log.Error($"Apply {recordType} failed, is target gameObject deleted? {nameof(StatusSwitcher)} = {record.StatusItem.GetSwitcherName()}, status name = {record.StatusItem.Name}", nameof(StatusSwitcherTarget));
 					return false;
 				}
 
@@ -154,7 +163,7 @@ namespace Icy.UI
 				status.Apply();
 				return true;
 			}
-			return false;
+			return true;
 		}
 
 #if UNITY_EDITOR
@@ -313,10 +322,20 @@ namespace Icy.UI
 					else
 						RectTransformStatus = null;
 					break;
+				case StatusSwitcherRecordType.Animator:
+					if (has)
+					{
+						AnimatorStatus = new AnimatorStatus();
+						InitStatusSingle(AnimatorStatus, StatusSwitcherRecordType.Animator
+							, record.AllStatusSwitcherComponent.animator);
+					}
+					else
+						AnimatorStatus = null;
+					break;
+				//New Status stub
 				default:
 					break;
 			}
-			//New Status stub
 		}
 
 		protected void InitStatusSingle(StatusSwitcherStatusBase status, StatusSwitcherRecordType recordType, StatusSwitcherStatusBase statusSaved)
@@ -364,10 +383,13 @@ namespace Icy.UI
 				case StatusSwitcherRecordType.RectTransform:
 					record.AllStatusSwitcherComponent.rectTransform = has ? RectTransformStatus : null;
 					break;
+				case StatusSwitcherRecordType.Animator:
+					record.AllStatusSwitcherComponent.animator = has ? AnimatorStatus : null;
+					break;
+				//New Status stub
 				default:
 					break;
 			}
-			//New Status stub
 		}
 
 		#region 添加到StatusSwitcher
@@ -445,6 +467,8 @@ namespace Icy.UI
 					return record.AllStatusSwitcherComponent.transform;
 				case StatusSwitcherRecordType.RectTransform:
 					return record.AllStatusSwitcherComponent.rectTransform;
+				case StatusSwitcherRecordType.Animator:
+					return record.AllStatusSwitcherComponent.animator;
 				//New Status stub
 				default:
 					return null;
@@ -483,12 +507,12 @@ namespace Icy.UI
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.RectTransform) && NeedShowRecordTypes();
 		}
 
-		//New Status stub
-
-		protected void OnInspectorDispose()
+		protected bool NeedShowAnimator()
 		{
-
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.Animator) && NeedShowRecordTypes();
 		}
+
+		//New Status stub
 #endif
 
 		protected void Clear()
@@ -496,9 +520,11 @@ namespace Icy.UI
 			GameObjectStatus?.Dispose();
 			TransformStatus?.Dispose();
 			RectTransformStatus?.Dispose();
+			AnimatorStatus?.Dispose();
 			GameObjectStatus = null;
 			TransformStatus = null;
 			RectTransformStatus = null;
+			AnimatorStatus = null;
 			//New Status stub
 		}
 	}
@@ -517,6 +543,7 @@ namespace Icy.UI
 		//ImageEx = 1 << 3,
 		//TextEx = 1 << 4,
 		//ButtonEx = 1 << 5,
+		Animator = 1 << 6,
 
 		//New Status stub
 	}
@@ -550,6 +577,7 @@ namespace Icy.UI
 		public GameObjectStatus gameObject;
 		public TransformStatus transform;
 		public RectTransformStatus rectTransform;
+		public AnimatorStatus animator;
 		//New Status stub
 	}
 }

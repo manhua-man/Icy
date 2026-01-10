@@ -33,7 +33,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 初始化状态
 		/// </summary>
-		public void Init(StatusSwitcherTarget target)
+		public virtual void Init(StatusSwitcherTarget target)
 		{
 			Target = target;
 		}
