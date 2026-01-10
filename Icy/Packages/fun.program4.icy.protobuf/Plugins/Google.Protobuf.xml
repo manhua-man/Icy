@@ -3197,6 +3197,9 @@
             of tokens provided by the tokenizer. This token stream is assumed to be valid JSON, with the
             tokenizer performing that validation - but not every token stream is valid "protobuf JSON".
             </summary>
+            <remarks>
+            This method maintains and checks the recursion depth, so *must* be called for any nested parsing.
+            </remarks>
         </member>
         <member name="M:Google.Protobuf.JsonParser.TryParseSingleValue(Google.Protobuf.Reflection.FieldDescriptor,Google.Protobuf.JsonTokenizer,System.Object@)">
             <summary>
@@ -3343,6 +3346,13 @@
             from another tokenizer. Note that if the returned tokenizer is "pushed back", that does not push back
             on the continuation tokenizer, or vice versa. Care should be taken when using this method - it was
             created for the sake of Any parsing.
+            </summary>
+        </member>
+        <member name="P:Google.Protobuf.JsonTokenizer.RecursionDepth">
+            <summary>
+            The depth of recursion within JsonParser. This is not directly computable within the tokenizer itself,
+            as arrays contribute to the recursion depth for ListValue parsing, but not for "normal" message types.
+            This is maintained (and checked) by <see cref="M:Google.Protobuf.JsonParser.Merge(Google.Protobuf.IMessage,Google.Protobuf.JsonTokenizer)"/>.
             </summary>
         </member>
         <member name="P:Google.Protobuf.JsonTokenizer.ObjectDepth">
@@ -6265,6 +6275,21 @@
         </member>
         <member name="M:Google.Protobuf.Reflection.FieldOptions.Types.FeatureSupport.ClearEditionRemoved">
             <summary>Clears the value of the "edition_removed" field</summary>
+        </member>
+        <member name="F:Google.Protobuf.Reflection.FieldOptions.Types.FeatureSupport.RemovalErrorFieldNumber">
+            <summary>Field number for the "removal_error" field.</summary>
+        </member>
+        <member name="P:Google.Protobuf.Reflection.FieldOptions.Types.FeatureSupport.RemovalError">
+            <summary>
+            The removal error text if this feature is used after the edition it was
+            removed in.
+            </summary>
+        </member>
+        <member name="P:Google.Protobuf.Reflection.FieldOptions.Types.FeatureSupport.HasRemovalError">
+            <summary>Gets whether the "removal_error" field is set</summary>
+        </member>
+        <member name="M:Google.Protobuf.Reflection.FieldOptions.Types.FeatureSupport.ClearRemovalError">
+            <summary>Clears the value of the "removal_error" field</summary>
         </member>
         <member name="F:Google.Protobuf.Reflection.OneofOptions.FeaturesFieldNumber">
             <summary>Field number for the "features" field.</summary>
@@ -10516,8 +10541,8 @@
              {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
              seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
              are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
-             is required. A proto3 JSON serializer should always use UTC (as indicated by
-             "Z") when printing the Timestamp type and a proto3 JSON parser should be
+             is required. A ProtoJSON serializer should always use UTC (as indicated by
+             "Z") when printing the Timestamp type and a ProtoJSON parser should be
              able to accept both UTC and other timezones (as indicated by an offset).
             
              For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
@@ -10541,7 +10566,7 @@
         <member name="P:Google.Protobuf.WellKnownTypes.Timestamp.Seconds">
             <summary>
             Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must
-            be between -315576000000 and 315576000000 inclusive (which corresponds to
+            be between -62135596800 and 253402300799 inclusive (which corresponds to
             0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).
             </summary>
         </member>
