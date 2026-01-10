@@ -28,36 +28,29 @@ namespace Icy.UI
 	[System.Serializable]
 	public class AnimatorStatus : StatusSwitcherStatusBase
 	{
-		/// <summary>
-		/// 是否播放动画（控制Animator组件的enable）
-		/// </summary>
+		[PropertyTooltip("是否播放动画（控制Animator组件的enable）")]
 		[InlineProperty]
 		[SerializeField]
 		public bool Play;
 
-		/// <summary>
-		/// 要播放的动画State名字
-		/// </summary>
+		[PropertyTooltip("要播放的动画State名字")]
 		[InlineProperty]
 		[SerializeField]
 		[DelayedProperty]
 		[ShowIf(nameof(Play))]
 		public string StateNameToPlay;
 
-		/// <summary>
-		/// 播放速度
-		/// </summary>
+		[PropertyTooltip("播放速度")]
 		[InlineProperty]
 		[SerializeField]
 		[DelayedProperty]
 		[ShowIf(nameof(Play))]
 		public float Speed = 1.0f;
 
-		/// <summary>
-		/// 是否从头播放
-		/// </summary>
+		[PropertyTooltip("是否从头播放")]
 		[InlineProperty]
 		[SerializeField]
+		[ShowIf(nameof(Play))]
 		public bool Rewind;
 
 		protected Animator _Animator;

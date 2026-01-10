@@ -166,6 +166,24 @@ namespace Icy.UI
 			return true;
 		}
 
+		protected StatusSwitcherStatusBase GetStatusByType(StatusSwitcherRecord record, StatusSwitcherRecordType recordType)
+		{
+			switch (recordType)
+			{
+				case StatusSwitcherRecordType.GameObject:
+					return record.AllStatusSwitcherComponent.gameObject;
+				case StatusSwitcherRecordType.Transform:
+					return record.AllStatusSwitcherComponent.transform;
+				case StatusSwitcherRecordType.RectTransform:
+					return record.AllStatusSwitcherComponent.rectTransform;
+				case StatusSwitcherRecordType.Animator:
+					return record.AllStatusSwitcherComponent.animator;
+				//New Status stub
+				default:
+					return null;
+			}
+		}
+
 #if UNITY_EDITOR
 		/// <summary>
 		/// StatusItem下拉列表的空选项
@@ -454,24 +472,6 @@ namespace Icy.UI
 			{
 				if (e != StatusSwitcherRecordType.None)
 					callback(e);
-			}
-		}
-
-		protected StatusSwitcherStatusBase GetStatusByType(StatusSwitcherRecord record, StatusSwitcherRecordType recordType)
-		{
-			switch (recordType)
-			{
-				case StatusSwitcherRecordType.GameObject:
-					return record.AllStatusSwitcherComponent.gameObject;
-				case StatusSwitcherRecordType.Transform:
-					return record.AllStatusSwitcherComponent.transform;
-				case StatusSwitcherRecordType.RectTransform:
-					return record.AllStatusSwitcherComponent.rectTransform;
-				case StatusSwitcherRecordType.Animator:
-					return record.AllStatusSwitcherComponent.animator;
-				//New Status stub
-				default:
-					return null;
 			}
 		}
 
