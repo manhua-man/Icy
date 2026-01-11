@@ -58,7 +58,7 @@ namespace Icy.UI
 		protected StatusSwitcherRecordType _PrevRecordTypes;
 
 		/// <summary>
-		/// GameObject类型的状态
+		/// GameObject状态
 		/// </summary>
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowGameObject))]
@@ -68,7 +68,7 @@ namespace Icy.UI
 		public GameObjectStatus GameObjectStatus;
 
 		/// <summary>
-		/// Transform类型的状态
+		/// Transform状态
 		/// </summary>
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowTransform))]
@@ -77,7 +77,7 @@ namespace Icy.UI
 		public TransformStatus TransformStatus;
 
 		/// <summary>
-		/// RectTransform类型的状态
+		/// RectTransform状态
 		/// </summary>
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRectTransform))]
@@ -86,13 +86,22 @@ namespace Icy.UI
 		public RectTransformStatus RectTransformStatus;
 
 		/// <summary>
-		/// Animator类型的状态
+		/// Animator状态
 		/// </summary>
 #if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowAnimator))]
 #endif
 		[BoxGroup("Status List/Animator")]
 		public AnimatorStatus AnimatorStatus;
+
+		/// <summary>
+		/// LitMotion状态
+		/// </summary>
+#if UNITY_EDITOR
+		[ShowIf(nameof(NeedShowLitMotion))]
+#endif
+		[BoxGroup("Status List/LitMotion")]
+		public LitMotionStatus LitMotionStatus;
 
 		//New Status stub
 
@@ -139,6 +148,7 @@ namespace Icy.UI
 					rtn &= TryToApply(i, StatusSwitcherRecordType.Transform);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.RectTransform);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.Animator);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.LitMotion);
 
 					//New Status stub
 					break;
@@ -178,6 +188,8 @@ namespace Icy.UI
 					return record.AllStatusSwitcherComponent.rectTransform;
 				case StatusSwitcherRecordType.Animator:
 					return record.AllStatusSwitcherComponent.animator;
+				case StatusSwitcherRecordType.LitMotion:
+					return record.AllStatusSwitcherComponent.litMotion;
 				//New Status stub
 				default:
 					return null;
@@ -350,6 +362,16 @@ namespace Icy.UI
 					else
 						AnimatorStatus = null;
 					break;
+				case StatusSwitcherRecordType.LitMotion:
+					if (has)
+					{
+						LitMotionStatus = new LitMotionStatus();
+						InitStatusSingle(LitMotionStatus, StatusSwitcherRecordType.LitMotion
+							, record.AllStatusSwitcherComponent.litMotion);
+					}
+					else
+						LitMotionStatus = null;
+					break;
 				//New Status stub
 				default:
 					break;
@@ -403,6 +425,9 @@ namespace Icy.UI
 					break;
 				case StatusSwitcherRecordType.Animator:
 					record.AllStatusSwitcherComponent.animator = has ? AnimatorStatus : null;
+					break;
+				case StatusSwitcherRecordType.LitMotion:
+					record.AllStatusSwitcherComponent.litMotion = has ? LitMotionStatus : null;
 					break;
 				//New Status stub
 				default:
@@ -512,6 +537,11 @@ namespace Icy.UI
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.Animator) && NeedShowRecordTypes();
 		}
 
+		protected bool NeedShowLitMotion()
+		{
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.LitMotion) && NeedShowRecordTypes();
+		}
+
 		//New Status stub
 #endif
 
@@ -521,10 +551,12 @@ namespace Icy.UI
 			TransformStatus?.Dispose();
 			RectTransformStatus?.Dispose();
 			AnimatorStatus?.Dispose();
+			LitMotionStatus?.Dispose();
 			GameObjectStatus = null;
 			TransformStatus = null;
 			RectTransformStatus = null;
 			AnimatorStatus = null;
+			LitMotionStatus = null;
 			//New Status stub
 		}
 	}
@@ -544,6 +576,7 @@ namespace Icy.UI
 		//TextEx = 1 << 4,
 		//ButtonEx = 1 << 5,
 		Animator = 1 << 6,
+		LitMotion = 1 << 7,
 
 		//New Status stub
 	}
@@ -578,6 +611,7 @@ namespace Icy.UI
 		public TransformStatus transform;
 		public RectTransformStatus rectTransform;
 		public AnimatorStatus animator;
+		public LitMotionStatus litMotion;
 		//New Status stub
 	}
 }
