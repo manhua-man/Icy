@@ -44,6 +44,8 @@ namespace Icy.UI
 		[ShowIf(nameof(HasAddedToAnyStatusItem))]
 		[ShowInInspector]
 		internal string StatusItemName = NONE;
+
+		protected StatusSwitcherRecordType _PrevRecordTypes;
 #endif
 
 		[PropertySpace(10, 10)]
@@ -54,8 +56,6 @@ namespace Icy.UI
 		[OnValueChanged(nameof(OnRecordTypesChanged))]
 #endif
 		public StatusSwitcherRecordType RecordTypes;
-
-		protected StatusSwitcherRecordType _PrevRecordTypes;
 
 		/// <summary>
 		/// GameObject状态
@@ -171,7 +171,6 @@ namespace Icy.UI
 				StatusSwitcherStatusBase status = GetStatusByType(record, recordType);
 				status.Init(this);
 				status.Apply();
-				return true;
 			}
 			return true;
 		}
@@ -201,6 +200,10 @@ namespace Icy.UI
 		/// StatusItem下拉列表的空选项
 		/// </summary>
 		internal const string NONE = "None";
+		/// <summary>
+		/// 忽略一次RecordType的变动监听，避免弹2次窗
+		/// </summary>
+		protected bool _IgnoreRecordTypesChangingOnce = false;
 
 		protected void Init()
 		{
@@ -308,6 +311,13 @@ namespace Icy.UI
 
 		protected void OnRecordTypesChanged()
 		{
+			if (_IgnoreRecordTypesChangingOnce)
+			{
+				_IgnoreRecordTypesChangingOnce = false;
+				RecordTypes = _PrevRecordTypes;
+				return;
+			}
+
 			int idx = _StatusItems.IndexOf(StatusItemName);
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 			StatusSwitcherRecord record = Records[idx];
@@ -315,10 +325,50 @@ namespace Icy.UI
 			ForEachRecordTypes((StatusSwitcherRecordType recordType) =>
 			{
 				if (!_PrevRecordTypes.HasFlag(recordType))
-					InitStatus(record, recordType);
+				{
+					bool has = RecordTypes.HasFlag(recordType);
+					if (has)
+					{
+						if (CanInitRecordType(recordType))
+							InitStatus(record, recordType);
+						else
+						{
+							//不能初始化的话，把Flag重置回去
+							RecordTypes &= ~recordType;
+							//忽略一次RecordType的变动监听，避免弹2次窗
+							_IgnoreRecordTypesChangingOnce = true;
+							return;
+						}
+					}
+					else
+						InitStatus(record, recordType);
+				}
 			});
 
 			_PrevRecordTypes = RecordTypes;
+		}
+
+		protected bool CanInitRecordType(StatusSwitcherRecordType recordType)
+		{
+			bool can;
+			string msg = "只有挂载了{0}组件的StatusSwitcherTarget，才能使用{1}类型";
+			switch (recordType)
+			{
+				case StatusSwitcherRecordType.Animator:
+					can = gameObject.GetComponent<Animator>() != null;
+					if (!can)
+						CommonUtility.SafeDisplayDialog("", string.Format(msg, nameof(Animator), recordType), "OK", LogLevel.Error);
+					return can;
+				case StatusSwitcherRecordType.LitMotion:
+					can = gameObject.GetComponent<LitMotion.Animation.LitMotionAnimation>() != null;
+					if (!can)
+						CommonUtility.SafeDisplayDialog("", string.Format(msg, nameof(LitMotion.Animation.LitMotionAnimation), recordType), "OK", LogLevel.Error);
+					return can;
+				//New Status stub
+				default:
+					break;
+			}
+			return true;
 		}
 
 		protected void InitStatus(StatusSwitcherRecord record, StatusSwitcherRecordType recordType)
