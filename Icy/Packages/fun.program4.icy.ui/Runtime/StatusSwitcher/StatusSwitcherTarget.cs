@@ -249,6 +249,7 @@ namespace Icy.UI
 
 			_StatusSwitcherToAdd = null;
 			_StatusSwitcherItemToAdd = null;
+			SetAddToStatusItemFoldoutExpand(!HasAddedToAnyStatusItem());
 			_Debug = false;
 
 			UnityEditor.SceneManagement.PrefabStage.prefabStageClosing -= OnPrefabStageClosing;
@@ -444,10 +445,10 @@ namespace Icy.UI
 		/// </summary>
 		protected List<StatusSwitcher> _PotentialStatusSwitchers;
 
+		[FoldoutGroup("AddToStatusItem")]
 		[Title("选择StatusSwitcher")]
 		[ValueDropdown(nameof(_PotentialStatusSwitchers), IsUniqueList = true, DropdownWidth = 200)]
 		[OnValueChanged(nameof(OnStatusSwitcherSelected))]
-		[HideIf(nameof(HasAddedToAnyStatusItem))]
 		[ShowInInspector]
 		protected StatusSwitcher _StatusSwitcherToAdd;
 
@@ -456,9 +457,9 @@ namespace Icy.UI
 		/// </summary>
 		protected List<string> _PotentialStatusSwitcherItems;
 
+		[FoldoutGroup("AddToStatusItem")]
 		[Title("选择StatusSwitcherItem")]
 		[ValueDropdown(nameof(_PotentialStatusSwitcherItems), IsUniqueList = true, DropdownWidth = 200)]
-		[HideIf(nameof(HasAddedToAnyStatusItem))]
 		[ShowInInspector]
 		protected string _StatusSwitcherItemToAdd;
 
@@ -473,8 +474,9 @@ namespace Icy.UI
 		/// <summary>
 		/// 将本Target，添加到一个StatusSwitcher的StatusItem中
 		/// </summary>
+		[FoldoutGroup("AddToStatusItem")]
 		[PropertySpace(10)]
-		[HideIf(nameof(HasAddedToAnyStatusItem))]
+		[EnableIf(nameof(EnableAddToStatusItemBtn))]
 		[Button("Add To StatusItem", Icon = SdfIconType.PlusCircleFill, ButtonHeight = (int)ButtonSizes.Medium)]
 		protected void AddToStatusItem()
 		{
@@ -490,6 +492,25 @@ namespace Icy.UI
 					break;
 				}
 			}
+		}
+
+		/// <summary>
+		/// 设置AddToStatusItem FoldoutGroup的展开状态
+		/// </summary>
+		protected void SetAddToStatusItemFoldoutExpand(bool expand)
+		{
+			using (Sirenix.OdinInspector.Editor.PropertyTree propertyTree = Sirenix.OdinInspector.Editor.PropertyTree.Create(this))
+			{
+				Sirenix.OdinInspector.Editor.InspectorProperty foldoutProperty =
+					propertyTree.GetPropertyAtPath($"#AddToStatusItem.{nameof(_StatusSwitcherToAdd)}").Parent;
+				foldoutProperty.State.Expanded = expand;
+				propertyTree.ApplyChanges();
+			}
+		}
+
+		protected bool EnableAddToStatusItemBtn()
+		{
+			return _StatusSwitcherToAdd != null && !string.IsNullOrEmpty(_StatusSwitcherItemToAdd);
 		}
 		#endregion
 
