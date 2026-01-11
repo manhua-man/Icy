@@ -78,5 +78,13 @@ namespace Icy.UI
 			LitMotionStatus otherStatus = other as LitMotionStatus;
 			Operation = otherStatus.Operation;
 		}
+
+		public override void Dispose()
+		{
+			//Editor下退出编辑时，需要停止LitMotion，否则物体销毁了、LitMotion还在执行，会持续报错
+			if (_LitMotionAnim != null)
+				_LitMotionAnim.Stop();
+			base.Dispose();
+		}
 	}
 }

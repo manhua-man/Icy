@@ -250,6 +250,9 @@ namespace Icy.UI
 			_StatusSwitcherToAdd = null;
 			_StatusSwitcherItemToAdd = null;
 			_Debug = false;
+
+			UnityEditor.SceneManagement.PrefabStage.prefabStageClosing -= OnPrefabStageClosing;
+			UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += OnPrefabStageClosing;
 		}
 
 		/// <summary>
@@ -543,6 +546,13 @@ namespace Icy.UI
 		}
 
 		//New Status stub
+
+		protected void OnPrefabStageClosing(UnityEditor.SceneManagement.PrefabStage stage)
+		{
+			//退出编辑时，清理Status数据
+			if (transform != null && transform.IsChildOf(stage.prefabContentsRoot.transform))
+				Clear();
+		}
 #endif
 
 		protected void Clear()
