@@ -131,7 +131,7 @@ namespace Icy.UI
 #if UNITY_EDITOR
 		protected MethodInfo _DrawLayoutMode;
 		protected UnityEditor.SerializedObject _SerializedObject;
-		protected UnityEditor.PopupWindowContent _AnchorPresetdPopup;
+		protected UnityEditor.PopupWindowContent _AnchorPresetPopup;
 
 		/// <summary>
 		/// 显示RectTransform的锚框选择窗口
@@ -157,8 +157,8 @@ namespace Icy.UI
 				UnityEditor.SerializedObject serializedObject = new UnityEditor.SerializedObject(Target.transform);
 
 				object obj = Activator.CreateInstance(rectTransformEditorType, new object[] { serializedObject });
-				_AnchorPresetdPopup = obj as UnityEditor.PopupWindowContent;
-				UnityEditor.PopupWindow.Show(dropdownPosition, _AnchorPresetdPopup);
+				_AnchorPresetPopup = obj as UnityEditor.PopupWindowContent;
+				UnityEditor.PopupWindow.Show(dropdownPosition, _AnchorPresetPopup);
 			}
 			catch (ExitGUIException)
 			{
@@ -169,8 +169,8 @@ namespace Icy.UI
 				Log.Error($"ShowAnchorPresetPopup exception, {e}", nameof(RectTransformStatus));
 			}
 
-			UnityEditor.EditorApplication.update -= CheckAnchorPresetdPopupStatus;
-			UnityEditor.EditorApplication.update += CheckAnchorPresetdPopupStatus;
+			UnityEditor.EditorApplication.update -= CheckAnchorPresetPopupStatus;
+			UnityEditor.EditorApplication.update += CheckAnchorPresetPopupStatus;
 		}
 
 		/// <summary>
@@ -217,18 +217,18 @@ namespace Icy.UI
 		}
 
 		/// <summary>
-		/// 检查AnchorPresetdPopup窗口状态，监听关闭时机
+		/// 检查AnchorPresetPopup窗口状态，监听关闭时机
 		/// </summary>
-		protected void CheckAnchorPresetdPopupStatus()
+		protected void CheckAnchorPresetPopupStatus()
 		{
-			if (_AnchorPresetdPopup == null || _AnchorPresetdPopup.editorWindow == null)
+			if (_AnchorPresetPopup == null || _AnchorPresetPopup.editorWindow == null)
 			{
-				UnityEditor.EditorApplication.update -= CheckAnchorPresetdPopupStatus;
-				OnAnchorPresetdPopupClosed();
+				UnityEditor.EditorApplication.update -= CheckAnchorPresetPopupStatus;
+				OnAnchorPresetPopupClosed();
 			}
 		}
 
-		protected void OnAnchorPresetdPopupClosed()
+		protected void OnAnchorPresetPopupClosed()
 		{
 			Record();
 		}
