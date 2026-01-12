@@ -282,6 +282,34 @@ namespace Icy.Asset
 			return !info.IsInvalid;
 		}
 
+#if UNITY_EDITOR
+		/// <summary>
+		/// 在YooAsset的Editor设置文件里，指定名字的Package是否开启了Addressable
+		/// </summary>
+		public static bool IsAddressableInSetting(string packageName)
+		{
+			if (string.IsNullOrEmpty(_YooAssetSettingPath))
+			{
+				string[] guids = UnityEditor.AssetDatabase.FindAssets("t:AssetBundleCollectorSetting");
+				_YooAssetSettingPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+			}
+			ScriptableObject obj = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(_YooAssetSettingPath);
+			System.Reflection.FieldInfo packages = obj.GetType().GetField("Packages");
+			dynamic dynamicList = packages.GetValue(obj);
+			bool isAddressable = false;
+			foreach (dynamic item in dynamicList)
+			{
+				if (item.PackageName == packageName)
+				{
+					isAddressable = item.EnableAddressable;
+					break;
+				}
+			}
+			return isAddressable;
+		}
+		private static string _YooAssetSettingPath;
+#endif
+
 		#region Patch
 		/// <summary>
 		/// 开始热更新资源
