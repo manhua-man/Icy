@@ -33,6 +33,12 @@ namespace Icy.Asset.Editor
 		private static AssetSettingWindow _AssetSettingWindow;
 		private AssetSetting _Setting;
 
+		[Title("YooAsset的默认Package的名字，比如 \"DefaultPackage\"")]
+		[DelayedProperty]
+		[Required]
+		[OnValueChanged(nameof(SaveSetting))]
+		public string DefaultPackageName;
+
 		[Title("热更新资源Host地址（主）")]
 		[DelayedProperty]
 		[Required]
@@ -106,6 +112,7 @@ namespace Icy.Asset.Editor
 		{
 			base.Initialize();
 			_Setting = GetAssetSetting();
+			DefaultPackageName = _Setting.DefaultPackageName;
 			AssetHostServerAddressMain = _Setting.AssetHostServerAddressMain;
 			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
 			PatchDLLCopyToDir = _Setting.PatchDLLCopyToDir;
@@ -133,6 +140,7 @@ namespace Icy.Asset.Editor
 
 		private void SaveSetting()
 		{
+			_Setting.DefaultPackageName = DefaultPackageName;
 			_Setting.AssetHostServerAddressMain = AssetHostServerAddressMain;
 			_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 			_Setting.PatchDLLCopyToDir = PatchDLLCopyToDir;

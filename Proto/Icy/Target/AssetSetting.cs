@@ -24,16 +24,17 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCLhAQoMQXNzZXRTZXR0",
-            "aW5nEiIKGkFzc2V0SG9zdFNlcnZlckFkZHJlc3NNYWluGAEgASgJEiUKHUFz",
-            "c2V0SG9zdFNlcnZlckFkZHJlc3NTdGFuZGJ5GAIgASgJEhkKEVBhdGNoRExM",
-            "Q29weVRvRGlyGAMgASgJEhwKFE1ldGFEYXRhRExMQ29weVRvRGlyGAQgASgJ",
-            "EiQKHEFzc2V0RG93bmxvYWRDb25maXJtVGhlc2hvbGQYBSABKAUSEQoJUGF0",
-            "Y2hETExzGA4gAygJEhQKDE1ldGFEYXRhRExMcxgPIAMoCWIGcHJvdG8z"));
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCL9AQoMQXNzZXRTZXR0",
+            "aW5nEhoKEkRlZmF1bHRQYWNrYWdlTmFtZRgBIAEoCRIiChpBc3NldEhvc3RT",
+            "ZXJ2ZXJBZGRyZXNzTWFpbhgCIAEoCRIlCh1Bc3NldEhvc3RTZXJ2ZXJBZGRy",
+            "ZXNzU3RhbmRieRgDIAEoCRIZChFQYXRjaERMTENvcHlUb0RpchgEIAEoCRIc",
+            "ChRNZXRhRGF0YURMTENvcHlUb0RpchgFIAEoCRIkChxBc3NldERvd25sb2Fk",
+            "Q29uZmlybVRoZXNob2xkGAYgASgFEhEKCVBhdGNoRExMcxgOIAMoCRIUCgxN",
+            "ZXRhRGF0YURMTHMYDyADKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir", "AssetDownloadConfirmTheshold", "PatchDLLs", "MetaDataDLLs" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "DefaultPackageName", "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir", "AssetDownloadConfirmTheshold", "PatchDLLs", "MetaDataDLLs" }, null, null, null, null)
           }));
     }
     #endregion
@@ -75,6 +76,7 @@ namespace Icy.Asset {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public AssetSetting(AssetSetting other) : this() {
+      defaultPackageName_ = other.defaultPackageName_;
       assetHostServerAddressMain_ = other.assetHostServerAddressMain_;
       assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
       patchDLLCopyToDir_ = other.patchDLLCopyToDir_;
@@ -91,8 +93,23 @@ namespace Icy.Asset {
       return new AssetSetting(this);
     }
 
+    /// <summary>Field number for the "DefaultPackageName" field.</summary>
+    public const int DefaultPackageNameFieldNumber = 1;
+    private string defaultPackageName_ = "";
+    /// <summary>
+    ///YooAsset的默认Package的名字，比如 "DefaultPackage"
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DefaultPackageName {
+      get { return defaultPackageName_; }
+      set {
+        defaultPackageName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "AssetHostServerAddressMain" field.</summary>
-    public const int AssetHostServerAddressMainFieldNumber = 1;
+    public const int AssetHostServerAddressMainFieldNumber = 2;
     private string assetHostServerAddressMain_ = "";
     /// <summary>
     ///热更新资源Host地址（主）
@@ -107,7 +124,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "AssetHostServerAddressStandby" field.</summary>
-    public const int AssetHostServerAddressStandbyFieldNumber = 2;
+    public const int AssetHostServerAddressStandbyFieldNumber = 3;
     private string assetHostServerAddressStandby_ = "";
     /// <summary>
     ///热更新资源Host地址（备）
@@ -122,7 +139,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "PatchDLLCopyToDir" field.</summary>
-    public const int PatchDLLCopyToDirFieldNumber = 3;
+    public const int PatchDLLCopyToDirFieldNumber = 4;
     private string patchDLLCopyToDir_ = "";
     /// <summary>
     ///打包过程中，会将HybridCLR编译出的热更DLL，Copy到此目录，方便业务侧将其打包成AB
@@ -137,7 +154,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "MetaDataDLLCopyToDir" field.</summary>
-    public const int MetaDataDLLCopyToDirFieldNumber = 4;
+    public const int MetaDataDLLCopyToDirFieldNumber = 5;
     private string metaDataDLLCopyToDir_ = "";
     /// <summary>
     ///在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB
@@ -152,7 +169,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "AssetDownloadConfirmTheshold" field.</summary>
-    public const int AssetDownloadConfirmThesholdFieldNumber = 5;
+    public const int AssetDownloadConfirmThesholdFieldNumber = 6;
     private int assetDownloadConfirmTheshold_;
     /// <summary>
     ///在非WIFI、非网线的网络环境下，下载资源量大于此值时，通知业务侧是否要开始下载，否则直接开始下载，单位MB
@@ -209,6 +226,7 @@ namespace Icy.Asset {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (DefaultPackageName != other.DefaultPackageName) return false;
       if (AssetHostServerAddressMain != other.AssetHostServerAddressMain) return false;
       if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
       if (PatchDLLCopyToDir != other.PatchDLLCopyToDir) return false;
@@ -223,6 +241,7 @@ namespace Icy.Asset {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (DefaultPackageName.Length != 0) hash ^= DefaultPackageName.GetHashCode();
       if (AssetHostServerAddressMain.Length != 0) hash ^= AssetHostServerAddressMain.GetHashCode();
       if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
       if (PatchDLLCopyToDir.Length != 0) hash ^= PatchDLLCopyToDir.GetHashCode();
@@ -248,24 +267,28 @@ namespace Icy.Asset {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (AssetHostServerAddressMain.Length != 0) {
+      if (DefaultPackageName.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(DefaultPackageName);
+      }
+      if (AssetHostServerAddressMain.Length != 0) {
+        output.WriteRawTag(18);
         output.WriteString(AssetHostServerAddressMain);
       }
       if (AssetHostServerAddressStandby.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(AssetHostServerAddressStandby);
       }
       if (PatchDLLCopyToDir.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(PatchDLLCopyToDir);
       }
       if (MetaDataDLLCopyToDir.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(42);
         output.WriteString(MetaDataDLLCopyToDir);
       }
       if (AssetDownloadConfirmTheshold != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteInt32(AssetDownloadConfirmTheshold);
       }
       patchDLLs_.WriteTo(output, _repeated_patchDLLs_codec);
@@ -280,24 +303,28 @@ namespace Icy.Asset {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (AssetHostServerAddressMain.Length != 0) {
+      if (DefaultPackageName.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(DefaultPackageName);
+      }
+      if (AssetHostServerAddressMain.Length != 0) {
+        output.WriteRawTag(18);
         output.WriteString(AssetHostServerAddressMain);
       }
       if (AssetHostServerAddressStandby.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(AssetHostServerAddressStandby);
       }
       if (PatchDLLCopyToDir.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(PatchDLLCopyToDir);
       }
       if (MetaDataDLLCopyToDir.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(42);
         output.WriteString(MetaDataDLLCopyToDir);
       }
       if (AssetDownloadConfirmTheshold != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteInt32(AssetDownloadConfirmTheshold);
       }
       patchDLLs_.WriteTo(ref output, _repeated_patchDLLs_codec);
@@ -312,6 +339,9 @@ namespace Icy.Asset {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (DefaultPackageName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DefaultPackageName);
+      }
       if (AssetHostServerAddressMain.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetHostServerAddressMain);
       }
@@ -340,6 +370,9 @@ namespace Icy.Asset {
     public void MergeFrom(AssetSetting other) {
       if (other == null) {
         return;
+      }
+      if (other.DefaultPackageName.Length != 0) {
+        DefaultPackageName = other.DefaultPackageName;
       }
       if (other.AssetHostServerAddressMain.Length != 0) {
         AssetHostServerAddressMain = other.AssetHostServerAddressMain;
@@ -378,22 +411,26 @@ namespace Icy.Asset {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            AssetHostServerAddressMain = input.ReadString();
+            DefaultPackageName = input.ReadString();
             break;
           }
           case 18: {
-            AssetHostServerAddressStandby = input.ReadString();
+            AssetHostServerAddressMain = input.ReadString();
             break;
           }
           case 26: {
-            PatchDLLCopyToDir = input.ReadString();
+            AssetHostServerAddressStandby = input.ReadString();
             break;
           }
           case 34: {
+            PatchDLLCopyToDir = input.ReadString();
+            break;
+          }
+          case 42: {
             MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
-          case 40: {
+          case 48: {
             AssetDownloadConfirmTheshold = input.ReadInt32();
             break;
           }
@@ -425,22 +462,26 @@ namespace Icy.Asset {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            AssetHostServerAddressMain = input.ReadString();
+            DefaultPackageName = input.ReadString();
             break;
           }
           case 18: {
-            AssetHostServerAddressStandby = input.ReadString();
+            AssetHostServerAddressMain = input.ReadString();
             break;
           }
           case 26: {
-            PatchDLLCopyToDir = input.ReadString();
+            AssetHostServerAddressStandby = input.ReadString();
             break;
           }
           case 34: {
+            PatchDLLCopyToDir = input.ReadString();
+            break;
+          }
+          case 42: {
             MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
-          case 40: {
+          case 48: {
             AssetDownloadConfirmTheshold = input.ReadInt32();
             break;
           }
