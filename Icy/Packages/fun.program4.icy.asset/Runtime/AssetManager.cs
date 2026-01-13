@@ -468,13 +468,15 @@ namespace Icy.Asset
 		/// <summary>
 		/// 同步加载资源
 		/// </summary>
-		public AssetRef LoadAsset(string address)
+		public AssetRef LoadAsset(string address, Type assetType = null)
 		{
 			if (_Cached.TryGetValue(address, out AssetRef assetRef))
 				return assetRef;
 			else
 			{
-				AssetHandle handle = _Package.LoadAssetSync(address);
+				if (assetType == null)
+					assetType = typeof(UnityEngine.Object);
+				AssetHandle handle = _Package.LoadAssetSync(address, assetType);
 				return CreateAssetRef(handle);
 			}
 		}

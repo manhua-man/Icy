@@ -632,7 +632,7 @@ namespace Icy.UI
 					return assetRef.AssetObject as Sprite;
 			}
 
-			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
+			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName, typeof(Sprite));
 			spriteAsset.Retain();
 			if (hasCacheOfUI)
 				spritesOfUI.Add(spriteName, spriteAsset);
