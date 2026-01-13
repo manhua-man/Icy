@@ -86,6 +86,15 @@ namespace Icy.UI
 		public RectTransformStatus RectTransformStatus;
 
 		/// <summary>
+		/// ButtonEx状态
+		/// </summary>
+#if UNITY_EDITOR
+		[ShowIf(nameof(NeedShowButtonEx))]
+#endif
+		[BoxGroup("Status List/ButtonEx")]
+		public ButtonExStatus ButtonExStatus;
+
+		/// <summary>
 		/// Animator状态
 		/// </summary>
 #if UNITY_EDITOR
@@ -147,6 +156,7 @@ namespace Icy.UI
 					rtn &= TryToApply(i, StatusSwitcherRecordType.GameObject);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.Transform);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.RectTransform);
+					rtn &= TryToApply(i, StatusSwitcherRecordType.ButtonEx);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.Animator);
 					rtn &= TryToApply(i, StatusSwitcherRecordType.LitMotion);
 
@@ -185,6 +195,8 @@ namespace Icy.UI
 					return record.AllStatusSwitcherComponent.transform;
 				case StatusSwitcherRecordType.RectTransform:
 					return record.AllStatusSwitcherComponent.rectTransform;
+				case StatusSwitcherRecordType.ButtonEx:
+					return record.AllStatusSwitcherComponent.buttonExStatus;
 				case StatusSwitcherRecordType.Animator:
 					return record.AllStatusSwitcherComponent.animator;
 				case StatusSwitcherRecordType.LitMotion:
@@ -354,6 +366,11 @@ namespace Icy.UI
 			string msg = "只有挂载了{0}组件的StatusSwitcherTarget，才能使用{1}类型";
 			switch (recordType)
 			{
+				case StatusSwitcherRecordType.ButtonEx:
+					can = gameObject.GetComponent<ButtonEx>() != null;
+					if (!can)
+						CommonUtility.SafeDisplayDialog("", string.Format(msg, nameof(ButtonEx), recordType), "OK", LogLevel.Error);
+					return can;
 				case StatusSwitcherRecordType.Animator:
 					can = gameObject.GetComponent<Animator>() != null;
 					if (!can)
@@ -380,8 +397,7 @@ namespace Icy.UI
 					if (has)
 					{
 						GameObjectStatus = new GameObjectStatus();
-						InitStatusSingle(GameObjectStatus, StatusSwitcherRecordType.GameObject
-							, record.AllStatusSwitcherComponent.gameObject);
+						InitStatusSingle(GameObjectStatus, recordType, record.AllStatusSwitcherComponent.gameObject);
 					}
 					else
 						GameObjectStatus = null;
@@ -390,8 +406,7 @@ namespace Icy.UI
 					if (has)
 					{
 						TransformStatus = new TransformStatus();
-						InitStatusSingle(TransformStatus, StatusSwitcherRecordType.Transform
-							, record.AllStatusSwitcherComponent.transform);
+						InitStatusSingle(TransformStatus, recordType, record.AllStatusSwitcherComponent.transform);
 					}
 					else
 						TransformStatus = null;
@@ -400,18 +415,25 @@ namespace Icy.UI
 					if (has)
 					{
 						RectTransformStatus = new RectTransformStatus();
-						InitStatusSingle(RectTransformStatus, StatusSwitcherRecordType.RectTransform
-							, record.AllStatusSwitcherComponent.rectTransform);
+						InitStatusSingle(RectTransformStatus, recordType, record.AllStatusSwitcherComponent.rectTransform);
 					}
 					else
 						RectTransformStatus = null;
+					break;
+				case StatusSwitcherRecordType.ButtonEx:
+					if (has)
+					{
+						ButtonExStatus = new ButtonExStatus();
+						InitStatusSingle(ButtonExStatus, recordType, record.AllStatusSwitcherComponent.buttonExStatus);
+					}
+					else
+						ButtonExStatus = null;
 					break;
 				case StatusSwitcherRecordType.Animator:
 					if (has)
 					{
 						AnimatorStatus = new AnimatorStatus();
-						InitStatusSingle(AnimatorStatus, StatusSwitcherRecordType.Animator
-							, record.AllStatusSwitcherComponent.animator);
+						InitStatusSingle(AnimatorStatus, recordType, record.AllStatusSwitcherComponent.animator);
 					}
 					else
 						AnimatorStatus = null;
@@ -420,8 +442,7 @@ namespace Icy.UI
 					if (has)
 					{
 						LitMotionStatus = new LitMotionStatus();
-						InitStatusSingle(LitMotionStatus, StatusSwitcherRecordType.LitMotion
-							, record.AllStatusSwitcherComponent.litMotion);
+						InitStatusSingle(LitMotionStatus, recordType, record.AllStatusSwitcherComponent.litMotion);
 					}
 					else
 						LitMotionStatus = null;
@@ -476,6 +497,9 @@ namespace Icy.UI
 					break;
 				case StatusSwitcherRecordType.RectTransform:
 					record.AllStatusSwitcherComponent.rectTransform = has ? RectTransformStatus : null;
+					break;
+				case StatusSwitcherRecordType.ButtonEx:
+					record.AllStatusSwitcherComponent.buttonExStatus = has ? ButtonExStatus : null;
 					break;
 				case StatusSwitcherRecordType.Animator:
 					record.AllStatusSwitcherComponent.animator = has ? AnimatorStatus : null;
@@ -606,6 +630,11 @@ namespace Icy.UI
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.RectTransform) && NeedShowRecordTypes();
 		}
 
+		protected bool NeedShowButtonEx()
+		{
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.ButtonEx) && NeedShowRecordTypes();
+		}
+
 		protected bool NeedShowAnimator()
 		{
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.Animator) && NeedShowRecordTypes();
@@ -631,11 +660,13 @@ namespace Icy.UI
 			GameObjectStatus?.Dispose();
 			TransformStatus?.Dispose();
 			RectTransformStatus?.Dispose();
+			ButtonExStatus?.Dispose();
 			AnimatorStatus?.Dispose();
 			LitMotionStatus?.Dispose();
 			GameObjectStatus = null;
 			TransformStatus = null;
 			RectTransformStatus = null;
+			ButtonExStatus = null;
 			AnimatorStatus = null;
 			LitMotionStatus = null;
 			//New Status stub
@@ -655,7 +686,7 @@ namespace Icy.UI
 		RectTransform = 1 << 2,
 		//ImageEx = 1 << 3,
 		//TextEx = 1 << 4,
-		//ButtonEx = 1 << 5,
+		ButtonEx = 1 << 5,
 		Animator = 1 << 6,
 		LitMotion = 1 << 7,
 
@@ -693,6 +724,7 @@ namespace Icy.UI
 		public RectTransformStatus rectTransform;
 		public AnimatorStatus animator;
 		public LitMotionStatus litMotion;
+		public ButtonExStatus buttonExStatus;
 		//New Status stub
 	}
 }
