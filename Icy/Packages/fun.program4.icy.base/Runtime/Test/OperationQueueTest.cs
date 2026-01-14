@@ -25,7 +25,7 @@ namespace Icy.Base
 	{
 		public static void Test()
 		{
-			OperationQueue queue = new OperationQueue("TestOperationQueue");
+			OperationQueue queue = new OperationQueue("TestOperationQueue"); //OperationQueue.Default;
 			queue.OnDisposed += OnDisposed;
 
 			// 1

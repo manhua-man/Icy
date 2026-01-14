@@ -54,6 +54,7 @@ namespace Icy.Frame
 			//尽可能早的初始化Log
 			Log.Init(writeLog2File);
 
+			OperationQueue.Default = new OperationQueue("Icy_DefaultOperationQueue");
 			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
 
 			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, "DefaultPackage", autoUnloadUnusedAssetsInterval);

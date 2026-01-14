@@ -28,6 +28,10 @@ namespace Icy.Base
 	public class OperationQueue : IDisposable
 	{
 		/// <summary>
+		/// 一个预设的、常驻的异步操作队列，方便业务侧直接使用
+		/// </summary>
+		public static OperationQueue Default { get; internal set; }
+		/// <summary>
 		/// 队列当前有多少个Operation，包括正在执行的
 		/// </summary>
 		public int Count => _QueueTypeQueue.Count;
