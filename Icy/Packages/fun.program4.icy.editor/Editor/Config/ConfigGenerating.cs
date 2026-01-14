@@ -41,8 +41,8 @@ namespace Icy.Editor
 			{
 				BiProgress.Show("Generate Config", "Generating config...", 0.5f);
 
-				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.ConfigSetting);
-				if (bytes == null)
+				ConfigSetting configSetting = SettingsHelper.GetSettingEditor<ConfigSetting>(true);
+				if (configSetting == null)
 				{
 					string msg = $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/{SettingsHelper.ConfigSetting}";
 					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
@@ -50,12 +50,9 @@ namespace Icy.Editor
 				}
 				else
 				{
-					string batFilePath = null;
-					ConfigSetting setting = ConfigSetting.Parser.ParseFrom(bytes);
-					if (setting != null)
-						batFilePath = setting.GenerateBatPath;
-					if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(setting.CodeOutputDir) 
-						|| string.IsNullOrEmpty(setting.BinOutputDir) || string.IsNullOrEmpty(setting.JsonOutputDir))
+					string batFilePath = configSetting.GenerateBatPath;
+					if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(configSetting.CodeOutputDir) 
+						|| string.IsNullOrEmpty(configSetting.BinOutputDir) || string.IsNullOrEmpty(configSetting.JsonOutputDir))
 					{
 						CommonUtility.SafeDisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，完成所有的设置", "OK", LogLevel.Error);
 						Clear();
@@ -77,9 +74,9 @@ namespace Icy.Editor
 						RedirectStandardError = true,
 					};
 
-					string relativeCodeOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.CodeOutputDir));
-					string relativeBinOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.BinOutputDir));
-					string relativeJsonOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.JsonOutputDir));
+					string relativeCodeOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(configSetting.CodeOutputDir));
+					string relativeBinOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(configSetting.BinOutputDir));
+					string relativeJsonOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(configSetting.JsonOutputDir));
 					processInfo.ArgumentList.Add(relativeCodeOutputDir);
 					processInfo.ArgumentList.Add(relativeBinOutputDir);
 					processInfo.ArgumentList.Add(relativeJsonOutputDir);

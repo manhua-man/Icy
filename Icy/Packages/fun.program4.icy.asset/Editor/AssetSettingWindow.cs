@@ -130,12 +130,10 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
-			if (bytes == null)
-				_Setting = new AssetSetting();
-			else
-				_Setting = AssetSetting.Parser.ParseFrom(bytes);
-			return _Setting;
+			AssetSetting setting = SettingsHelper.GetSettingEditor<AssetSetting>();
+			if (setting == null)
+				setting = new AssetSetting();
+			return setting;
 		}
 
 		private void SaveSetting()

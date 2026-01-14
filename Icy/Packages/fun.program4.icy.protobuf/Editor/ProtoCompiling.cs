@@ -375,13 +375,8 @@ namespace Icy.Protobuf.Editor
 
 		private static ProtoSetting GetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.ProtoSetting);
-			if (bytes != null)
-			{
-				ProtoSetting setting = ProtoSetting.Parser.ParseFrom(bytes);
-				return setting;
-			}
-			return null;
+			ProtoSetting setting = SettingsHelper.GetSettingEditor<ProtoSetting>();
+			return setting;
 		}
 
 		private static void OnCompileProtoLog(object sender, DataReceivedEventArgs e)

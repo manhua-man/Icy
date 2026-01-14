@@ -285,12 +285,10 @@ namespace Icy.Asset.Editor
 
 		protected AssetSetting LoadAssetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
-			if (bytes == null)
-				_AssetSetting = new AssetSetting();
-			else
-				_AssetSetting = AssetSetting.Parser.ParseFrom(bytes);
-			return _AssetSetting;
+			AssetSetting setting = SettingsHelper.GetSettingEditor<AssetSetting>();
+			if (setting == null)
+				setting = new AssetSetting();
+			return setting;
 		}
 
 		protected virtual string GetSettingFileName()
