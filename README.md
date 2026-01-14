@@ -1,11 +1,12 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
 HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + NativeWebSocket + Protobuf + Odin + LitMotion + SRDebugger + UIParticle + UIEffect + ZString；  
-更具体的见[Features & Roadmap](#features--roadmap)
+更具体的见[Features & Roadmap](#features--roadmap)，以及 [DeepWiki 文档](https://deepwiki.com/ProgramForFun/Icy)。
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
 ![](https://img.shields.io/github/last-commit/ProgramForFun/Icy)
+[![zread](https://img.shields.io/badge/Ask_Zread-00D9FF.svg?style=flat)](https://zread.ai/ProgramForFun/Icy)
 &nbsp;
 
 [![](https://github-readme-activity-graph.vercel.app/graph?username=ProgramForFun&repo=Icy&theme=github-light&area=true)](https://github.com/ProgramForFun/Icy/activity)
@@ -35,7 +36,9 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 &nbsp;
 
 ## 文档
-[How-Tos](https://github.com/ProgramForFun/Icy/wiki/How%E2%80%90tos)  
+- [DeepWiki 文档（AI 代码助手 - 总览与模块说明）](https://deepwiki.com/ProgramForFun/Icy)  
+- [Zread 文档（AI 代码助手 - 智能问答）](https://zread.ai/ProgramForFun/Icy)  
+- [How-Tos](https://github.com/ProgramForFun/Icy/wiki/How%E2%80%90tos)  
 （目前在集中推进Roadmap的实现，文档的完善会晚一些）
 
 &nbsp;
