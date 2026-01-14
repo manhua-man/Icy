@@ -32,7 +32,7 @@ public static class TestPlayground
 		//LogTest.Test();
 		//ProcedureTest.Test();
 		//EventTest.Test();
-		FSMTest.Test();
+		//FSMTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();
@@ -45,12 +45,13 @@ public static class TestPlayground
 		//ConfigTest.Test();
 		//TimerTest.Test();
 		//MainThreadDispatcherTest.Test();
+		OperationQueueTest.Test();
 	}
 }
 
 
 /// <summary>
-/// ÒòÎªprotobufÉú³ÉµÄC#ÀàÔÚÖ÷¹¤³ÌÕâ±ß£¬ËùÒÔ²âÊÔÀà²»ÄÜĞ´ÔÚPackageÀï
+/// å› ä¸ºprotobufç”Ÿæˆçš„C#ç±»åœ¨ä¸»å·¥ç¨‹è¿™è¾¹ï¼Œæ‰€ä»¥æµ‹è¯•ç±»ä¸èƒ½å†™åœ¨Packageé‡Œ
 /// </summary>
 public static class ProtobufTest
 {
@@ -60,14 +61,14 @@ public static class ProtobufTest
 		messageResult.ErrorCode = 0;
 		messageResult.ErrorMsg = "Success";
 
-		// protoÏûÏ¢¶ÔÏó£¬×ª»»³É×Ö½ÚÊı×é
+		// protoæ¶ˆæ¯å¯¹è±¡ï¼Œè½¬æ¢æˆå­—èŠ‚æ•°ç»„
 		byte[] dataBytes = messageResult.ToByteArray();
 
-		// protoÏûÏ¢×Ö½ÚÊı×é£¬×ª»»³É¶ÔÏó
-		// µÚÒ»ÖÖ·½Ê½£ºÊµÀıµ÷ÓÃ
+		// protoæ¶ˆæ¯å­—èŠ‚æ•°ç»„ï¼Œè½¬æ¢æˆå¯¹è±¡
+		// ç¬¬ä¸€ç§æ–¹å¼ï¼šå®ä¾‹è°ƒç”¨
 		// IMessage message = new MessageResult();
 		// MessageResult newMessageResult = (MessageResult)message.Descriptor.Parser.ParseFrom(dataBytes);
-		// µÚ¶şÖÖ·½Ê½£º¾²Ì¬Ö±½Óµ÷ÓÃ
+		// ç¬¬äºŒç§æ–¹å¼ï¼šé™æ€ç›´æ¥è°ƒç”¨
 		TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(dataBytes);
 
 		Debug.Log(newMessageResult.ErrorCode);
