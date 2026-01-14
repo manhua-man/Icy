@@ -97,9 +97,10 @@ namespace Icy.Asset.Editor
 				procedure.AddStep(step);
 			}
 
+			AssetSetting assetSetting = SettingsHelper.GetSettingEditor<AssetSetting>();
+			procedure.Blackboard.WriteString("BuildPackage", assetSetting.DefaultPackageName);
 			procedure.Blackboard.WriteInt("BuildTarget", (int)buildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", buildSetting);
-			procedure.Blackboard.WriteString("BuildPackage", "DefaultPackage");
 			procedure.OnFinish += OnBuildAssetBundleProcedureFinish;
 			procedure.Start();
 		}

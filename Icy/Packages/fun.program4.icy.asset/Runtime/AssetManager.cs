@@ -85,10 +85,6 @@ namespace Icy.Asset
 		/// </summary>
 		private Dictionary<string, AssetRef> _Cached;
 		/// <summary>
-		/// 默认Package名字
-		/// </summary>
-		private string _DefaultPackageName;
-		/// <summary>
 		/// Build相关设置
 		/// </summary>
 		private BuildSetting _BuildSetting;
@@ -103,23 +99,21 @@ namespace Icy.Asset
 		/// 初始化资源系统
 		/// </summary>
 		/// <param name="playMode">管理器的运行模式</param>
-		/// <param name="defaultPackageName">默认的Package名字</param>
 		/// <param name="autoUnloadUnusedAssetsInterval">间隔多长时间自动执行一次UnloadUnusedAssets，单位秒</param>
-		public async UniTask<bool> Init(EPlayMode playMode, string defaultPackageName, int autoUnloadUnusedAssetsInterval)
+		internal async UniTask<bool> Init(EPlayMode playMode, int autoUnloadUnusedAssetsInterval)
 		{
-			YooAssets.Initialize();
-			_DefaultPackageName = defaultPackageName;
-			_AutoUnloadUnusedAssetsInterval = autoUnloadUnusedAssetsInterval;
-
-			_Package = YooAssets.TryGetPackage(defaultPackageName);
-			if (_Package == null)
-			{
-				_Package = YooAssets.CreatePackage(defaultPackageName);
-				YooAssets.SetDefaultPackage(_Package);
-			}
-
 			byte[] assetSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.AssetSetting);
 			AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
+
+			YooAssets.Initialize();
+			_AutoUnloadUnusedAssetsInterval = autoUnloadUnusedAssetsInterval;
+
+			_Package = YooAssets.TryGetPackage(AssetSetting.DefaultPackageName);
+			if (_Package == null)
+			{
+				_Package = YooAssets.CreatePackage(AssetSetting.DefaultPackageName);
+				YooAssets.SetDefaultPackage(_Package);
+			}
 
 			IDecryptionServices decryptionServices = null;
 			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
@@ -135,7 +129,7 @@ namespace Icy.Asset
 			InitializationOperation initializationOperation = null;
 			if (playMode == EPlayMode.EditorSimulateMode)
 			{
-				PackageInvokeBuildResult buildResult = EditorSimulateModeHelper.SimulateBuild(defaultPackageName);
+				PackageInvokeBuildResult buildResult = EditorSimulateModeHelper.SimulateBuild(AssetSetting.DefaultPackageName);
 				string packageRoot = buildResult.PackageRootDirectory;
 				EditorSimulateModeParameters createParameters = new EditorSimulateModeParameters();
 				createParameters.EditorFileSystemParameters = FileSystemParameters.CreateDefaultEditorFileSystemParameters(packageRoot);
@@ -262,7 +256,7 @@ namespace Icy.Asset
 		/// </summary>
 		public void SwitchPackageToDefault()
 		{
-			_Package = YooAssets.GetPackage(_DefaultPackageName);
+			_Package = YooAssets.GetPackage(AssetSetting.DefaultPackageName);
 		}
 
 		/// <summary>

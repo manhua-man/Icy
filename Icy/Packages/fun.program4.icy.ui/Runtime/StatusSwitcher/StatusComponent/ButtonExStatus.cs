@@ -16,6 +16,7 @@
 
 
 using Icy.Asset;
+using Icy.Base;
 using Sirenix.OdinInspector;
 using System.IO;
 using UnityEngine;
@@ -64,7 +65,8 @@ namespace Icy.UI
 			else
 			{
 				string path = UnityEditor.AssetDatabase.GetAssetPath(_Btn.Sprite);
-				if (AssetManager.IsAddressableInSetting("DefaultPackage"))
+				AssetSetting assetSetting = SettingsHelper.GetSettingEditor<AssetSetting>();
+				if (AssetManager.IsAddressableInSetting(assetSetting.DefaultPackageName))
 					Sprite = Path.GetFileNameWithoutExtension(path);
 				else
 					Sprite = path;

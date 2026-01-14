@@ -57,7 +57,7 @@ namespace Icy.Frame
 			OperationQueue.Default = new OperationQueue("Icy_DefaultOperationQueue");
 			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
 
-			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, "DefaultPackage", autoUnloadUnusedAssetsInterval);
+			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, autoUnloadUnusedAssetsInterval);
 			if (!assetMgrInitSucceed)
 			{
 				Log.Assert(false, "AssetManager init failed!");
