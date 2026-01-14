@@ -65,12 +65,11 @@ namespace Icy.Protobuf.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.ProtoSetting);
-			if (bytes == null)
+			_Setting = SettingsHelper.GetSettingEditor<ProtoSetting>();
+			if (_Setting == null)
 				_Setting = new ProtoSetting();
 			else
 			{
-				_Setting = ProtoSetting.Parser.ParseFrom(bytes);
 				CompileBatPath = _Setting.CompileBatPath;
 				ProtoOutputDir = _Setting.ProtoOutputDir;
 				ProtoAssemblyName = _Setting.ProtoAssemblyName;

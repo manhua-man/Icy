@@ -678,12 +678,11 @@ namespace Icy.UI
 		/// <param name="uiName"></param>
 		private void ValidateUICode(string uiName, UIBase ui)
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
-			if (bytes == null)
+			UISetting uiSetting = SettingsHelper.GetSettingEditor<UISetting>(true);
+			if (uiSetting == null)
 				Log.Error("Can not find UI setting");
 			else
 			{
-				UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);
 				if (string.IsNullOrEmpty(uiSetting.UIRootDir))
 				{
 					Log.Error($"Please set UI root path first. Go to menu Icy/UI/Setting to set it");

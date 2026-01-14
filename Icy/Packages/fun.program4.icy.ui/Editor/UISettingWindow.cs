@@ -49,14 +49,11 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
-			if (bytes == null)
+			_Setting = SettingsHelper.GetSettingEditor<UISetting>(true);
+			if (_Setting == null)
 				_Setting = new UISetting();
 			else
-			{
-				_Setting = UISetting.Parser.ParseFrom(bytes);
 				UIRootPath = _Setting.UIRootDir;
-			}
 		}
 
 		private void OnUIRootPathChanged()

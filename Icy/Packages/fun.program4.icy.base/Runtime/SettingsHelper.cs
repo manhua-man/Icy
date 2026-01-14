@@ -16,7 +16,10 @@
 
 
 using Cysharp.Threading.Tasks;
+using System;
 using System.IO;
+using System.Reflection;
+using pb = global::Google.Protobuf;
 
 namespace Icy.Base
 {
@@ -66,25 +69,6 @@ namespace Icy.Base
 			return bytes;
 		}
 
-#if UNITY_EDITOR
-		/// <summary>
-		/// 直接同步加载框架Setting，editor专用
-		/// </summary>
-		/// <param name="dir">Setting文件所在的目录</param>
-		/// <param name="fileNameWithExtension">setting文件名</param>
-		internal static byte[] LoadSettingEditor(string dir, string fileNameWithExtension)
-		{
-			string path = Path.Combine(dir, fileNameWithExtension);
-			if (File.Exists(path))
-			{
-				byte[] bytes = File.ReadAllBytes(path);
-				CommonUtility.xor(bytes);
-				return bytes;
-			}
-			return null;
-		}
-#endif
-
 		/// <summary>
 		/// 保存框架Setting
 		/// </summary>
@@ -121,6 +105,51 @@ namespace Icy.Base
 		}
 
 #if UNITY_EDITOR
+		/// <summary>
+		/// 直接同步加载框架Setting对象，editor专用
+		/// </summary>
+		/// <typeparam name="T">Setting类型</typeparam>
+		/// <param name="fileNameWithExtension">Setting文件的名字</param>
+		public static T GetSettingEditor<T>(bool isEditorOnlySetting = false) where T : pb::IMessage<T>, new()
+		{
+			Type typeT = typeof(T);
+			string fileNameWithExtension;
+			//特殊处理BuildSetting，它是区分平台的，这里获取当前BuildTarget的
+			if (typeT.Name.Contains("BuildSetting"))
+				fileNameWithExtension = GetBuildSettingNameEditor(UnityEditor.EditorUserBuildSettings.activeBuildTarget);
+			else
+				fileNameWithExtension = typeT.Name + ".json";
+
+			string settingDir = isEditorOnlySetting ? GetEditorOnlySettingDir() : GetSettingDir();
+			byte[] bytes = LoadSettingEditor(settingDir, fileNameWithExtension);
+			if (bytes == null)
+				return default;
+			else
+			{
+				T rtn = new T();
+				FieldInfo parser = typeT.GetField("_parser", BindingFlags.NonPublic | BindingFlags.Static);
+				dynamic staticField = parser.GetValue(null);
+				return staticField.ParseFrom(bytes);
+			}
+		}
+
+		/// <summary>
+		/// 直接同步加载框架Setting bytes，editor专用
+		/// </summary>
+		/// <param name="dir">Setting文件所在的目录</param>
+		/// <param name="fileNameWithExtension">setting文件名</param>
+		internal static byte[] LoadSettingEditor(string dir, string fileNameWithExtension)
+		{
+			string path = Path.Combine(dir, fileNameWithExtension);
+			if (File.Exists(path))
+			{
+				byte[] bytes = File.ReadAllBytes(path);
+				CommonUtility.xor(bytes);
+				return bytes;
+			}
+			return null;
+		}
+
 		internal static string GetBuildSettingNameEditor(UnityEditor.BuildTarget buildTarget)
 		{
 			switch (buildTarget)

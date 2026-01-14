@@ -73,12 +73,11 @@ namespace Icy.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.ConfigSetting);
-			if (bytes == null)
+			_Setting = SettingsHelper.GetSettingEditor<ConfigSetting>(true);
+			if (_Setting == null)
 				_Setting = new ConfigSetting();
 			else
 			{
-				_Setting = ConfigSetting.Parser.ParseFrom(bytes);
 				GenerateBatPath = _Setting.GenerateBatPath;
 				CodeOutputDir = _Setting.CodeOutputDir;
 				BinOutputDir = _Setting.BinOutputDir;
